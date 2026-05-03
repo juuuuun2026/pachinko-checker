@@ -338,7 +338,6 @@ body {
 .link-btn-web     { background: rgba(122,176,255,0.1); color: #7ab0ff; border: 1px solid rgba(122,176,255,0.25); }
 .link-btn-pworld  { background: rgba(255,138,138,0.1); color: #ff8a8a; border: 1px solid rgba(255,138,138,0.25); }
 .link-btn-daidata { background: rgba(192,122,255,0.1); color: #c07aff; border: 1px solid rgba(192,122,255,0.25); }
-.link-btn-site7   { background: rgba(255,176,122,0.1); color: #ffb07a; border: 1px solid rgba(255,176,122,0.25); }
 
 /* ===== SHOP INFO TAGS ===== */
 .shop-info-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
@@ -590,18 +589,12 @@ function getDaidataLink(name) {
   if (id) return `https://daidata.goraggio.com/${id}`;
   return `https://www.google.com/search?q=${encodeURIComponent(name + ' 台データオンライン')}`;
 }
-function getSite7Link(name) {
-  const url = SHOPS[name]?.site7;
-  if (url) return url;
-  return `https://www.google.com/search?q=${encodeURIComponent(name + ' サイトセブン')}`;
-}
 function shopLinksHTML(name) {
   return `<div class="shop-links">
     <a class="link-btn link-btn-map"     href="${getMapsLink(name)}"    target="_blank" rel="noopener">🗺️ マップ</a>
     <a class="link-btn link-btn-web"     href="${getWebsiteLink(name)}" target="_blank" rel="noopener">🌐 公式HP</a>
     <a class="link-btn link-btn-pworld"  href="${getPWorldLink(name)}"  target="_blank" rel="noopener">🎰 P-world</a>
     <a class="link-btn link-btn-daidata" href="${getDaidataLink(name)}" target="_blank" rel="noopener">📊 台データ</a>
-    <a class="link-btn link-btn-site7"   href="${getSite7Link(name)}"   target="_blank" rel="noopener">7️⃣ サイト7</a>
   </div>`;
 }
 
