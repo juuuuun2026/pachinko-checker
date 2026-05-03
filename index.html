@@ -3,250 +3,565 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>パチンコ特定日チェッカー</title>
+<title>パチンコ特定日チェッカー | 総武線沿い版（千葉〜秋葉原）</title>
+<meta name="description" content="総武線沿い（千葉〜秋葉原）のパチンコ店特定日を日付・店名で即検索。約40店舗のイベント日パターンを完全収録。台データ・P-worldへの直リンク付き。">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Hiragino Sans', 'Meiryo', sans-serif; background: #0f0f1a; color: #eee; min-height: 100vh; }
+/* ===== DESIGN SYSTEM ===== */
+:root {
+  --bg-base:      #0a0a14;
+  --bg-card:      rgba(18, 18, 36, 0.85);
+  --color-gold:   #f0c040;
+  --color-gold2:  #e08020;
+  --color-cyan:   #00d4ff;
+  --color-red:    #ff3a3a;
+  --color-text:   #e8e8f0;
+  --color-muted:  #8888aa;
+  --color-border: rgba(240, 192, 64, 0.25);
+  --glow-gold:    0 0 16px rgba(240, 192, 64, 0.35);
+  --glow-cyan:    0 0 16px rgba(0, 212, 255, 0.35);
+  --radius-sm:    8px;
+  --radius-md:    14px;
+  --radius-lg:    20px;
+  --gap-sm:       8px;
+  --gap-md:       16px;
+  --gap-lg:       24px;
+  --font-ja:      'Hiragino Sans', 'Meiryo', 'Yu Gothic', sans-serif;
+}
 
-  /* パスワード画面 */
-  #lock-screen {
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    min-height: 100vh; padding: 20px;
-  }
-  #lock-screen h1 { font-size: 1.8rem; color: #f0c040; margin-bottom: 8px; }
-  #lock-screen p { color: #aaa; margin-bottom: 30px; }
-  #lock-screen input {
-    width: 100%; max-width: 300px; padding: 14px; font-size: 1.1rem;
-    border: 2px solid #444; border-radius: 10px; background: #1a1a2e;
-    color: #eee; text-align: center; margin-bottom: 12px;
-  }
-  #lock-screen button {
-    width: 100%; max-width: 300px; padding: 14px; font-size: 1.1rem;
-    background: #f0c040; color: #111; border: none; border-radius: 10px;
-    font-weight: bold; cursor: pointer;
-  }
-  #lock-error { color: #f55; margin-top: 10px; font-size: 0.9rem; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* メイン画面 */
-  #main-screen { display: none; padding: 16px; max-width: 600px; margin: 0 auto; }
-  h1.title { font-size: 1.4rem; color: #f0c040; text-align: center; margin: 16px 0 4px; }
-  .subtitle { text-align: center; color: #888; font-size: 0.85rem; margin-bottom: 20px; }
+body {
+  font-family: var(--font-ja);
+  background: var(--bg-base);
+  color: var(--color-text);
+  min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse at 15% 40%, rgba(0,212,255,0.04) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 15%, rgba(240,192,64,0.05) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 90%, rgba(255,58,58,0.03) 0%, transparent 50%);
+}
 
-  /* 検索フォーム */
-  .search-box { background: #1a1a2e; border-radius: 14px; padding: 18px; margin-bottom: 16px; }
-  .search-box label { font-size: 0.85rem; color: #aaa; display: block; margin-bottom: 6px; }
-  .search-box input[type="date"] {
-    width: 100%; padding: 12px; font-size: 1rem; border: 2px solid #333;
-    border-radius: 10px; background: #0f0f1a; color: #eee; margin-bottom: 14px;
-  }
-  .area-btns { display: flex; gap: 8px; margin-bottom: 14px; }
-  .area-btn {
-    flex: 1; padding: 10px; border: 2px solid #333; border-radius: 10px;
-    background: #0f0f1a; color: #aaa; font-size: 0.95rem; cursor: pointer;
-  }
-  .area-btn.active { border-color: #f0c040; color: #f0c040; background: #1a1600; }
-  .search-btn {
-    width: 100%; padding: 14px; font-size: 1.1rem; font-weight: bold;
-    background: linear-gradient(135deg, #f0c040, #e08020); color: #111;
-    border: none; border-radius: 10px; cursor: pointer;
-  }
-  .search-btn:active { opacity: 0.85; }
+/* ===== NAV ===== */
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(8, 8, 18, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 var(--gap-md);
+  height: 52px;
+}
+.nav-brand {
+  font-size: 0.95rem;
+  font-weight: bold;
+  color: var(--color-gold);
+  text-decoration: none;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: var(--glow-gold);
+}
+.site-nav a.nav-link {
+  color: var(--color-muted);
+  text-decoration: none;
+  font-size: 0.8rem;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  transition: color 0.2s, background 0.2s;
+  white-space: nowrap;
+}
+.site-nav a.nav-link:hover,
+.site-nav a.nav-link.active {
+  color: var(--color-gold);
+  background: rgba(240, 192, 64, 0.08);
+}
 
-  /* 結果エリア */
-  #results { display: none; }
-  .result-date { text-align: center; font-size: 0.9rem; color: #888; margin-bottom: 16px; }
-  .result-date span { color: #f0c040; font-weight: bold; }
+/* ===== LAYOUT ===== */
+.page-container {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 var(--gap-md) 60px;
+}
 
-  /* ランキング */
-  .section-title {
-    font-size: 1rem; font-weight: bold; color: #f0c040;
-    margin-bottom: 12px; padding-left: 4px;
-  }
-  .rank-card {
-    background: #1a1a2e; border-radius: 14px; padding: 14px 16px;
-    margin-bottom: 10px; border-left: 4px solid #555;
-  }
-  .rank-card.rank-1 { border-left-color: #ffd700; }
-  .rank-card.rank-2 { border-left-color: #c0c0c0; }
-  .rank-card.rank-3 { border-left-color: #cd7f32; }
-  .rank-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-  .rank-medal { font-size: 1.4rem; }
-  .rank-name { font-size: 1.05rem; font-weight: bold; color: #fff; flex: 1; }
-  .rank-area { font-size: 0.75rem; background: #333; color: #aaa; padding: 2px 8px; border-radius: 20px; }
-  .rank-score {
-    font-size: 0.8rem; background: #f0c040; color: #111;
-    padding: 2px 8px; border-radius: 20px; font-weight: bold;
-  }
-  .rank-patterns { display: flex; flex-wrap: wrap; gap: 6px; }
-  .pattern-tag {
-    font-size: 0.75rem; background: #2a2a40; color: #aad4f5;
-    padding: 3px 10px; border-radius: 20px; border: 1px solid #3a3a60;
-  }
+/* ===== HERO ===== */
+.page-hero {
+  text-align: center;
+  padding: 32px 0 20px;
+}
+.hero-icon { font-size: 2.8rem; margin-bottom: 8px; filter: drop-shadow(0 0 12px rgba(240,192,64,0.6)); }
+.page-hero h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--color-gold);
+  margin-bottom: 6px;
+  text-shadow: var(--glow-gold);
+  letter-spacing: 0.02em;
+}
+.page-hero p { font-size: 0.85rem; color: var(--color-muted); }
 
-  /* 全店舗リスト */
-  .all-list { margin-top: 20px; }
-  .shop-row {
-    display: flex; align-items: center; padding: 10px 14px;
-    background: #1a1a2e; border-radius: 10px; margin-bottom: 6px; gap: 10px;
-  }
-  .shop-rank-num { font-size: 0.8rem; color: #666; width: 24px; text-align: center; }
-  .shop-name-wrap { flex: 1; }
-  .shop-name { font-size: 0.95rem; }
-  .shop-patterns-small { font-size: 0.72rem; color: #888; margin-top: 2px; }
-  .shop-area-badge { font-size: 0.7rem; color: #aaa; background: #222; padding: 2px 7px; border-radius: 20px; }
-  .shop-score-badge { font-size: 0.72rem; background: #2a2a40; color: #aad4f5; padding: 2px 8px; border-radius: 20px; }
+/* ===== GLASS CARD ===== */
+.glass-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--gap-md);
+  margin-bottom: var(--gap-md);
+}
 
-  .no-result { text-align: center; color: #666; padding: 40px 0; font-size: 0.95rem; }
-  .count-badge { font-size: 0.85rem; color: #888; margin-bottom: 10px; }
+/* ===== TABS ===== */
+.tabs { display: flex; gap: var(--gap-sm); margin-bottom: var(--gap-md); }
+.tab-btn {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.03);
+  color: var(--color-muted);
+  font-size: 0.95rem;
+  font-family: var(--font-ja);
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tab-btn.active {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+  background: rgba(240, 192, 64, 0.08);
+  box-shadow: var(--glow-gold);
+}
 
-  /* リンクボタン（定義は下部の2列グリッド版を使用） */
+/* ===== FORM ELEMENTS ===== */
+.glass-card label {
+  font-size: 0.82rem;
+  color: var(--color-muted);
+  display: block;
+  margin-bottom: 6px;
+  margin-top: 12px;
+}
+.glass-card label:first-child { margin-top: 0; }
 
-  /* タブ */
-  .tabs { display: flex; gap: 8px; margin-bottom: 16px; }
-  .tab-btn {
-    flex: 1; padding: 11px; border: 2px solid #333; border-radius: 10px;
-    background: #0f0f1a; color: #aaa; font-size: 0.95rem; cursor: pointer; font-weight: bold;
-  }
-  .tab-btn.active { border-color: #f0c040; color: #f0c040; background: #1a1600; }
+.glass-card input[type="date"],
+.glass-card input[type="text"] {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  font-family: var(--font-ja);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius-sm);
+  background: rgba(0,0,0,0.35);
+  color: var(--color-text);
+  margin-bottom: var(--gap-md);
+  transition: border-color 0.2s;
+}
+.glass-card input:focus {
+  outline: none;
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 2px rgba(240,192,64,0.15);
+}
 
-  /* 店名検索 */
-  #shop-search-box { background: #1a1a2e; border-radius: 14px; padding: 18px; margin-bottom: 16px; display: none; }
-  #shop-search-box label { font-size: 0.85rem; color: #aaa; display: block; margin-bottom: 6px; }
-  #shop-name-input {
-    width: 100%; padding: 12px; font-size: 1rem; border: 2px solid #333;
-    border-radius: 10px; background: #0f0f1a; color: #eee; margin-bottom: 14px;
-  }
-  #shop-search-results { display: none; }
-  .shop-detail-card {
-    background: #1a1a2e; border-radius: 14px; padding: 16px; margin-bottom: 14px;
-    border-left: 4px solid #f0c040;
-  }
-  .shop-detail-name { font-size: 1.1rem; font-weight: bold; color: #fff; margin-bottom: 4px; }
-  .shop-detail-area { font-size: 0.75rem; background: #333; color: #aaa; padding: 2px 8px; border-radius: 20px; display: inline-block; margin-bottom: 12px; }
-  /* .shop-detail-section は下部の flex 版で定義 */
-  .shop-detail-patterns { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
-  .upcoming-month { margin-bottom: 12px; }
-  .upcoming-month-label { font-size: 0.8rem; color: #888; margin-bottom: 6px; }
-  .upcoming-dates { display: flex; flex-wrap: wrap; gap: 6px; }
-  .date-chip {
-    font-size: 0.8rem; background: #0f2a1a; color: #5dcc8a;
-    padding: 4px 10px; border-radius: 20px; border: 1px solid #1a4a2a;
-  }
-  .date-chip.today { background: #2a1a00; color: #f0c040; border-color: #4a3000; font-weight: bold; }
-  .suggest-list { background: #0f0f1a; border: 1px solid #333; border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
-  .suggest-item { padding: 11px 14px; font-size: 0.95rem; cursor: pointer; border-bottom: 1px solid #1a1a2e; }
-  .suggest-item:last-child { border-bottom: none; }
-  .suggest-item:hover, .suggest-item:active { background: #1a1a2e; }
-  .suggest-area { font-size: 0.72rem; color: #888; margin-left: 8px; }
+/* ===== AREA BUTTONS ===== */
+.area-btns { display: flex; gap: var(--gap-sm); margin-bottom: var(--gap-md); }
+.area-btn {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.03);
+  color: var(--color-muted);
+  font-size: 0.95rem;
+  font-family: var(--font-ja);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.area-btn.active {
+  border-color: var(--color-cyan);
+  color: var(--color-cyan);
+  background: rgba(0, 212, 255, 0.08);
+}
 
-  /* リンクボタン：2列グリッド */
-  .shop-links { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 10px 0; }
-  .link-btn { display: block; text-align: center; padding: 8px 4px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; text-decoration: none; }
-  .link-btn-map     { background: #1a3a1a; color: #5dcc8a; border: 1px solid #2a5a2a; }
-  .link-btn-web     { background: #1a1a3a; color: #7ab0ff; border: 1px solid #2a2a5a; }
-  .link-btn-pworld  { background: #3a1a1a; color: #ff8a8a; border: 1px solid #5a2a2a; }
-  .link-btn-daidata { background: #2a1a3a; color: #c07aff; border: 1px solid #4a2a5a; }
-  .link-btn-site7   { background: #3a2a1a; color: #ffb07a; border: 1px solid #5a3a2a; }
+/* ===== PRIMARY BUTTON ===== */
+.btn-primary {
+  width: 100%;
+  padding: 14px;
+  font-size: 1.05rem;
+  font-weight: bold;
+  font-family: var(--font-ja);
+  background: linear-gradient(135deg, var(--color-gold), var(--color-gold2));
+  color: #111;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  box-shadow: var(--glow-gold);
+  transition: opacity 0.15s, transform 0.1s;
+}
+.btn-primary:active { opacity: 0.85; transform: scale(0.99); }
 
-  /* 店舗情報タグ */
-  .shop-info-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
-  .shop-info-tag { font-size: 0.8rem; background: #222; color: #ccc; padding: 3px 10px; border-radius: 20px; border: 1px solid #333; }
-  .specialty-tag { background: #1a2a1a; color: #8ddc8a; border-color: #2a4a2a; }
+/* ===== RESULTS ===== */
+.result-date {
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--color-muted);
+  margin-bottom: var(--gap-md);
+  padding: 10px;
+  background: rgba(240,192,64,0.05);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+}
+.result-date span { color: var(--color-gold); font-weight: bold; font-size: 1rem; }
 
-  /* 店舗詳細セクションヘッダー */
-  .shop-detail-section { display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; color: #f0c040; font-weight: bold; margin: 12px 0 6px; }
-  .event-add-btn { font-size: 0.75rem; padding: 3px 10px; background: #2a3a1a; color: #8ddc8a; border: 1px solid #3a5a2a; border-radius: 20px; cursor: pointer; }
+.section-title {
+  font-size: 0.95rem;
+  font-weight: bold;
+  color: var(--color-gold);
+  margin-bottom: 12px;
+  padding-left: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.section-title::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 1em;
+  background: var(--color-gold);
+  border-radius: 2px;
+}
 
-  /* イベント */
-  .event-list { margin-bottom: 8px; }
-  .event-item { font-size: 0.85rem; color: #ddd; padding: 5px 0; border-bottom: 1px solid #222; }
-  .event-date { color: #f0c040; font-weight: bold; margin-right: 6px; }
-  .event-empty { font-size: 0.8rem; color: #555; padding: 4px 0; }
-  .event-form { display: none; gap: 6px; flex-wrap: wrap; margin: 6px 0; }
-  .event-form input { min-width: 100px; }
+/* ===== RANK CARDS ===== */
+.rank-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  border-left: 3px solid #555;
+  transition: transform 0.15s;
+}
+.rank-card:active { transform: scale(0.99); }
+.rank-card.rank-1 { border-left-color: #ffd700; box-shadow: 0 0 18px rgba(255,215,0,0.2); }
+.rank-card.rank-2 { border-left-color: #c0c0c0; box-shadow: 0 0 12px rgba(192,192,192,0.12); }
+.rank-card.rank-3 { border-left-color: #cd7f32; box-shadow: 0 0 12px rgba(205,127,50,0.15); }
+.rank-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.rank-medal { font-size: 1.4rem; }
+.rank-name { font-size: 1.02rem; font-weight: bold; color: #fff; flex: 1; }
+.rank-area {
+  font-size: 0.72rem;
+  background: rgba(255,255,255,0.08);
+  color: var(--color-muted);
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+.rank-score {
+  font-size: 0.75rem;
+  background: rgba(240,192,64,0.15);
+  color: var(--color-gold);
+  border: 1px solid rgba(240,192,64,0.3);
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-weight: bold;
+}
+.rank-patterns { display: flex; flex-wrap: wrap; gap: 6px; }
+.pattern-tag {
+  font-size: 0.75rem;
+  background: rgba(0,212,255,0.08);
+  color: var(--color-cyan);
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(0,212,255,0.2);
+}
+
+/* ===== ALL LIST ===== */
+.all-list { margin-top: 20px; }
+.shop-row {
+  display: flex;
+  align-items: flex-start;
+  padding: 12px 14px;
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: var(--radius-sm);
+  margin-bottom: 6px;
+  gap: 10px;
+  transition: border-color 0.15s;
+}
+.shop-row:hover { border-color: var(--color-border); }
+.shop-rank-num { font-size: 0.8rem; color: #555; width: 24px; text-align: center; flex-shrink: 0; padding-top: 2px; }
+.shop-name-wrap { flex: 1; min-width: 0; }
+.shop-name { font-size: 0.95rem; font-weight: 500; }
+.shop-patterns-small { font-size: 0.72rem; color: var(--color-muted); margin-top: 2px; }
+.shop-area-badge {
+  font-size: 0.7rem;
+  color: var(--color-muted);
+  background: rgba(255,255,255,0.05);
+  padding: 2px 7px;
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.shop-score-badge {
+  font-size: 0.72rem;
+  background: rgba(0,212,255,0.08);
+  color: var(--color-cyan);
+  border: 1px solid rgba(0,212,255,0.2);
+  padding: 2px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.no-result { text-align: center; color: #555; padding: 40px 0; font-size: 0.95rem; }
+.count-badge { font-size: 0.82rem; color: var(--color-muted); margin-bottom: 10px; padding-left: 4px; }
+
+/* ===== SHOP LINKS ===== */
+.shop-links { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 10px 0 0; }
+.link-btn {
+  display: block;
+  text-align: center;
+  padding: 8px 4px;
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
+  font-weight: bold;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+.link-btn:active { opacity: 0.75; }
+.link-btn-map     { background: rgba(93,204,138,0.1);  color: #5dcc8a; border: 1px solid rgba(93,204,138,0.25); }
+.link-btn-web     { background: rgba(122,176,255,0.1); color: #7ab0ff; border: 1px solid rgba(122,176,255,0.25); }
+.link-btn-pworld  { background: rgba(255,138,138,0.1); color: #ff8a8a; border: 1px solid rgba(255,138,138,0.25); }
+.link-btn-daidata { background: rgba(192,122,255,0.1); color: #c07aff; border: 1px solid rgba(192,122,255,0.25); }
+.link-btn-site7   { background: rgba(255,176,122,0.1); color: #ffb07a; border: 1px solid rgba(255,176,122,0.25); }
+
+/* ===== SHOP INFO TAGS ===== */
+.shop-info-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+.shop-info-tag {
+  font-size: 0.78rem;
+  background: rgba(255,255,255,0.05);
+  color: var(--color-muted);
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.specialty-tag { background: rgba(141,220,138,0.08); color: #8ddc8a; border-color: rgba(141,220,138,0.2); }
+
+/* ===== SHOP DETAIL CARD ===== */
+.shop-detail-card {
+  background: var(--bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 14px;
+}
+.shop-detail-name { font-size: 1.1rem; font-weight: bold; color: #fff; margin-bottom: 4px; }
+.shop-detail-area {
+  font-size: 0.72rem;
+  background: rgba(255,255,255,0.07);
+  color: var(--color-muted);
+  padding: 2px 8px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+.shop-detail-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.83rem;
+  color: var(--color-gold);
+  font-weight: bold;
+  margin: 14px 0 6px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(240,192,64,0.15);
+}
+.event-add-btn {
+  font-size: 0.73rem;
+  padding: 3px 10px;
+  background: rgba(141,220,138,0.1);
+  color: #8ddc8a;
+  border: 1px solid rgba(141,220,138,0.25);
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: var(--font-ja);
+}
+.shop-detail-patterns { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+
+/* ===== UPCOMING DATES ===== */
+.upcoming-month { margin-bottom: 12px; }
+.upcoming-month-label { font-size: 0.8rem; color: var(--color-muted); margin-bottom: 6px; }
+.upcoming-dates { display: flex; flex-wrap: wrap; gap: 6px; }
+.date-chip {
+  font-size: 0.8rem;
+  background: rgba(0,42,26,0.6);
+  color: #5dcc8a;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(93,204,138,0.2);
+}
+.date-chip.today {
+  background: rgba(42,26,0,0.8);
+  color: var(--color-gold);
+  border-color: rgba(240,192,64,0.3);
+  font-weight: bold;
+}
+
+/* ===== SUGGEST ===== */
+.suggest-list {
+  background: rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-sm);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.suggest-item {
+  padding: 11px 14px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  transition: background 0.15s;
+}
+.suggest-item:last-child { border-bottom: none; }
+.suggest-item:hover, .suggest-item:active { background: rgba(240,192,64,0.07); }
+.suggest-area { font-size: 0.72rem; color: var(--color-muted); margin-left: 8px; }
+
+/* ===== EVENTS ===== */
+.event-list { margin-bottom: 8px; }
+.event-item { font-size: 0.85rem; color: var(--color-text); padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.event-date { color: var(--color-gold); font-weight: bold; margin-right: 6px; }
+.event-empty { font-size: 0.8rem; color: #555; padding: 4px 0; }
+.event-form { display: none; gap: 6px; flex-wrap: wrap; margin: 6px 0; }
+.event-form input {
+  min-width: 100px;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(0,0,0,0.4);
+  color: var(--color-text);
+  font-family: var(--font-ja);
+}
+
+/* ===== FOOTER ===== */
+.site-footer {
+  text-align: center;
+  padding: 24px var(--gap-md);
+  color: #444;
+  font-size: 0.75rem;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  margin-top: 20px;
+}
+
+/* ===== MOBILE NAV OVERFLOW ===== */
+@media (max-width: 360px) {
+  .site-nav { gap: 2px; }
+  .site-nav a.nav-link { padding: 6px 7px; font-size: 0.75rem; }
+}
 </style>
 </head>
 <body>
 
-<!-- パスワード画面 -->
-<div id="lock-screen">
-  <div style="font-size:2.5rem;margin-bottom:12px;">🎰</div>
-  <h1>特定日チェッカー</h1>
-  <p>総武線沿い版</p>
-  <input type="password" id="pw-input" placeholder="パスワードを入力" onkeydown="if(event.key==='Enter')checkPw()">
-  <button onclick="checkPw()">ログイン</button>
-  <div id="lock-error"></div>
-</div>
+<!-- ナビゲーション -->
+<nav class="site-nav">
+  <a href="index.html" class="nav-brand">🎰 総武線パチンコ攻略</a>
+  <a href="index.html" class="nav-link active">トップ</a>
+  <a href="#checker-section" class="nav-link">特定日</a>
+  <a href="stations.html" class="nav-link">駅別店舗</a>
+</nav>
 
-<!-- メイン画面 -->
-<div id="main-screen">
-  <h1 class="title">🎰 特定日チェッカー</h1>
-  <p class="subtitle">総武線沿い版（千葉〜秋葉原）</p>
+<!-- メイン -->
+<div class="page-container">
 
-  <!-- タブ切り替え -->
-  <div class="tabs">
-    <button class="tab-btn active" id="tab-date" onclick="switchTab('date')">📅 日付で探す</button>
-    <button class="tab-btn" id="tab-shop" onclick="switchTab('shop')">🔍 店名で探す</button>
+  <!-- ヒーロー -->
+  <div class="page-hero">
+    <div class="hero-icon">🎰</div>
+    <h1>パチンコ特定日チェッカー</h1>
+    <p>総武線沿い版（千葉〜秋葉原）</p>
   </div>
 
-  <div class="search-box" id="date-search-box">
-    <label>📅 日付を選択</label>
-    <input type="date" id="date-input">
+  <!-- 特定日チェッカー -->
+  <section id="checker-section">
 
-    <label>📍 エリア</label>
-    <div class="area-btns">
-      <button class="area-btn active" data-area="tokyo" onclick="selectArea(this)">東京</button>
-      <button class="area-btn" data-area="chiba" onclick="selectArea(this)">千葉</button>
-      <button class="area-btn" data-area="both" onclick="selectArea(this)">両方</button>
+    <!-- タブ -->
+    <div class="tabs">
+      <button class="tab-btn active" id="tab-date" onclick="switchTab('date')">📅 日付で探す</button>
+      <button class="tab-btn" id="tab-shop" onclick="switchTab('shop')">🔍 店名で探す</button>
     </div>
 
-    <button class="search-btn" onclick="doSearch()">🔍 検索する</button>
-  </div>
-
-  <!-- 店名検索ボックス -->
-  <div id="shop-search-box">
-    <label>🏪 店名を入力（一部でもOK）</label>
-    <input type="text" id="shop-name-input" placeholder="例：マルハン、エスパス、PIA..." oninput="onShopInput(this.value)">
-    <div id="suggest-list"></div>
-    <button class="search-btn" onclick="doShopSearch()">🔍 この店の特定日を見る</button>
-  </div>
-
-  <!-- 店名検索結果 -->
-  <div id="shop-search-results"></div>
-
-  <div id="results">
-    <div class="result-date" id="result-label"></div>
-
-    <div class="section-title">🏆 おすすめランキング TOP3</div>
-    <div id="ranking"></div>
-
-    <div class="all-list">
-      <div class="section-title">📋 全該当店舗一覧</div>
-      <div class="count-badge" id="count-label"></div>
-      <div id="shop-list"></div>
+    <!-- 日付検索 -->
+    <div class="glass-card" id="date-search-box">
+      <label>📅 日付を選択</label>
+      <input type="date" id="date-input">
+      <label>📍 エリア</label>
+      <div class="area-btns">
+        <button class="area-btn active" data-area="tokyo" onclick="selectArea(this)">東京</button>
+        <button class="area-btn" data-area="chiba" onclick="selectArea(this)">千葉</button>
+        <button class="area-btn" data-area="both" onclick="selectArea(this)">両方</button>
+      </div>
+      <button class="btn-primary" onclick="doSearch()">🔍 検索する</button>
     </div>
-  </div>
+
+    <!-- 店名検索 -->
+    <div class="glass-card" id="shop-search-box" style="display:none">
+      <label>🏪 店名を入力（一部でもOK）</label>
+      <input type="text" id="shop-name-input" placeholder="例：マルハン、エスパス、PIA..." oninput="onShopInput(this.value)">
+      <div id="suggest-list"></div>
+      <button class="btn-primary" onclick="doShopSearch()">🔍 この店の特定日を見る</button>
+    </div>
+
+    <!-- 店名検索結果 -->
+    <div id="shop-search-results"></div>
+
+    <!-- 日付検索結果 -->
+    <div id="results" style="display:none">
+      <div class="result-date" id="result-label"></div>
+
+      <div class="section-title">🏆 おすすめランキング TOP3</div>
+      <div id="ranking"></div>
+
+      <div class="all-list">
+        <div class="section-title">📋 全該当店舗一覧</div>
+        <div class="count-badge" id="count-label"></div>
+        <div id="shop-list"></div>
+      </div>
+    </div>
+
+  </section>
 </div>
 
+<footer class="site-footer">
+  © 2025 総武線パチンコ攻略 — 千葉〜秋葉原 特定日情報
+</footer>
+
+<script src="data.js"></script>
 <script>
-// ===== パスワード =====
-const PASSWORD = "777";
+// ===== 初期化 =====
+window.addEventListener('DOMContentLoaded', () => {
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth()+1).padStart(2,'0');
+  const dd = String(today.getDate()).padStart(2,'0');
+  document.getElementById('date-input').value = `${yyyy}-${mm}-${dd}`;
 
-function checkPw() {
-  const val = document.getElementById('pw-input').value;
-  if (val === PASSWORD) {
-    document.getElementById('lock-screen').style.display = 'none';
-    document.getElementById('main-screen').style.display = 'block';
-    // 今日の日付をデフォルト設定
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth()+1).padStart(2,'0');
-    const dd = String(today.getDate()).padStart(2,'0');
-    document.getElementById('date-input').value = `${yyyy}-${mm}-${dd}`;
-  } else {
-    document.getElementById('lock-error').textContent = 'パスワードが違います';
+  // 駅ページからの ?shop= で店名プリフィル
+  const params = new URLSearchParams(location.search);
+  const preShop = params.get('shop');
+  if (preShop) {
+    switchTab('shop');
+    document.getElementById('shop-name-input').value = preShop;
+    if (!allShops) allShops = getAllShops();
+    const match = allShops.find(s => s.name === preShop);
+    if (match) {
+      selectedShop = match;
+      doShopSearch();
+    }
   }
-}
+});
 
 // ===== エリア選択 =====
 let selectedArea = 'tokyo';
@@ -256,155 +571,37 @@ function selectArea(btn) {
   selectedArea = btn.dataset.area;
 }
 
-// ===== 特定日データ（総武線沿い：千葉〜東京） =====
-const DATA = {
-  tokyo: {
-    d1: ["秋葉原UNO"],
-    d2: ["ビッグアップル秋葉原店","新ガーデン亀戸店"],
-    d3: ["Dステーション新小岩","エスパス1300新小岩北口駅前店","キコーナ平井店","サイバーパチンコ秋葉原昭和通り口店","スーパーDステーション錦糸町"],
-    d4: ["みとやジャックポット錦糸町店","みとや錦糸町南口店","みとや錦糸町北口店"],
-    d5: [],
-    d6: ["アイランド秋葉原店","エスパス日拓秋葉原駅前店","ビッグアップル秋葉原店"],
-    d7: ["エスパス1300新小岩北口駅前店","エスパス日拓秋葉原駅前店","スパークル亀戸店","みとやジャックポット錦糸町店","みとや錦糸町南口店","みとや錦糸町北口店","秋葉原UNO"],
-    d8: ["新ガーデン亀戸店"],
-    d9: ["Dステーション新小岩","エスパス1300新小岩北口駅前店","キコーナ平井店","スーパーDステーション錦糸町"],
-    d0: ["キコーナ平井店","ヒノマル錦糸町店","ヒノマル錦糸町店II","みとやジャックポット錦糸町店","みとや錦糸町南口店","みとや錦糸町北口店","新ガーデン亀戸店"],
-    m1:[],m2:[],m3:[],m4:[],m5:[],m6:[],m7:[],m8:[],m9:[],m10:[],m11:[],m12:[],m13:[],m14:[],m15:[],m16:[],m17:[],m18:[],m19:[],m20:[],m21:[],m22:[],m23:[],m24:[],m25:[],m26:[],m27:[],m28:[],m29:[],m30:[],m31:[],
-    w0:[],w1:[],w2:[],w3:[],w4:[],w5:[],
-    w6: ["新ガーデン亀戸店"],
-    nth_1_6:[],nth_2_6:[],nth_3_6:[],nth_4_6:[],nth_1_0:[],nth_2_0:[],nth_3_0:[],nth_1_1:[],nth_2_1:[],nth_3_1:[],nth_1_2:[],nth_2_2:[],nth_3_2:[],nth_1_3:[],nth_2_3:[],nth_3_3:[],nth_1_4:[],nth_2_4:[],nth_3_4:[],nth_1_5:[],nth_2_5:[],nth_3_5:[],
-    last_0:[],last_1:[],last_2:[],last_3:[],last_4:[],last_5:[],last_6:[],
-    zorome: ["アイランド秋葉原店","ビッグアップル秋葉原店"],
-    md: ["アイランド秋葉原店","エスパス日拓秋葉原駅前店","ビッグアップル秋葉原店","新ガーデン亀戸店"]
-  },
-  chiba: {
-    d1: ["アスワン幕張","アミューズ千葉","第一プラザ船橋店","本八幡UNO"],
-    d2: ["パールショップともえ稲毛長沼店","パラッツォ新検見川店","パラッツォ船橋店"],
-    d3: ["ガイア西船橋店","サンパレス本八幡","ビックマーチ東習志野店","ミリオン習志野店","やすだ幕張店"],
-    d4: ["TOHO幕張店","SLOT COSMO 405","ダイエー木更津店","ユーコーラッキー松戸店"],
-    d5: ["PIA津田沼","ピーアーク千葉駅前店","やすだ稲毛駅前店","やすだ幕張店","ニュー後楽園市川店"],
-    d6: ["トワーズ船橋店","パールショップともえ稲毛長沼店"],
-    d7: ["PIA津田沼","アスワンFUNABASHI","アミューズ千葉","エスパス日拓稲毛駅前新館","キクヤ千葉店","やすだ幕張店","やすだ稲毛駅前店","西船スターダスト"],
-    d8: ["ハップス市川駅前店","パラッツォ新検見川店","パラッツォ船橋店"],
-    d9: ["ガイア西船橋店","ビックマーチ東習志野店","やすだ幕張店"],
-    d0: [],
-    m1: ["サンラッキー市川店"],
-    m2:[],m3:[],m4:[],m5:[],m6:[],m7:[],m8:[],m9:[],m10:[],
-    m11: ["PIA津田沼","第一プラザ船橋店"],
-    m12: ["PIA津田沼"],
-    m13:[],
-    m14: ["TOHO幕張店"],
-    m15:[],m16:[],m17:[],m18:[],m19:[],m20:[],
-    m21: ["サンラッキー市川店","やすだ稲毛駅前店","やすだ幕張店","第一プラザ船橋店"],
-    m22: ["やすだ稲毛駅前店","やすだ幕張店"],
-    m23:[],m24:[],m25:[],m26:[],
-    m27: ["ニュークラウン津田沼店"],
-    m28:[],m29:[],m30:[],m31:[],
-    w0:[],w1:[],w2:[],w3:[],w4:[],w5:[],w6:[],
-    nth_1_6:[],nth_2_6:[],nth_3_2:[],nth_3_6:[],
-    nth_1_0:[],nth_2_0:[],nth_3_0:[],nth_1_1:[],nth_2_1:[],nth_3_1:[],nth_1_3:[],nth_2_3:[],nth_3_3:[],nth_1_4:[],nth_2_4:[],nth_3_4:[],nth_1_5:[],nth_2_5:[],nth_3_5:[],nth_4_6:[],
-    last_6:[],last_0:[],last_1:[],last_2:[],last_3:[],last_4:[],last_5:[],
-    zorome: ["PIA津田沼","アスワン幕張","アミューズ千葉","エスパス日拓稲毛駅前新館","サンラッキー市川店","トワーズ船橋店"],
-    md: ["PIA津田沼","アミューズ千葉","キクヤ千葉店","本八幡ZoRoN"]
-  }
-};
-
 // ===== リンク生成 =====
 function getMapsLink(name) {
   return `https://www.google.com/maps/search/${encodeURIComponent(name)}`;
 }
-
 function getWebsiteLink(name) {
   const hp = SHOPS[name]?.hp;
   if (hp) return hp;
-  // 公式HPが未登録の場合はGoogle検索
   return `https://www.google.com/search?q=${encodeURIComponent(name + ' 公式サイト')}`;
 }
-
-// ===== 店舗マスターデータ =====
-// station:最寄り駅 walk:徒歩分 exchange:交換率 hp:公式HP
-// pworld:p-worldパス daidata:台データオンラインID site7:サイトセブンURL
-// specialty:得意分野タグ events:イベント[{date,name}]
-const SHOPS = {
-  // ===== 千葉エリア =====
-  "ピーアーク千葉駅前店":        { station:"千葉",    walk:1,  exchange:"", hp:"", pworld:"chiba/p-ark-chiba2",      daidata:"100856", site7:"", specialty:[], events:[] },
-  "アミューズ千葉":              { station:"千葉",    walk:5,  exchange:"", hp:"", pworld:"",                         daidata:"100711", site7:"", specialty:[], events:[] },
-  "キクヤ千葉店":                { station:"千葉",    walk:5,  exchange:"", hp:"", pworld:"",                         daidata:"101340", site7:"", specialty:[], events:[] },
-  "やすだ稲毛駅前店":            { station:"稲毛",    walk:1,  exchange:"", hp:"", pworld:"chiba/yasuda-inage",        daidata:"203061", site7:"", specialty:[], events:[] },
-  "エスパス日拓稲毛駅前新館":    { station:"稲毛",    walk:1,  exchange:"", hp:"", pworld:"",                         daidata:"100948", site7:"", specialty:[], events:[] },
-  "パールショップともえ稲毛長沼店":{ station:"稲毛",  walk:10, exchange:"", hp:"", pworld:"",                         daidata:"",       site7:"", specialty:[], events:[] },
-  "パラッツォ新検見川店":        { station:"新検見川", walk:3, exchange:"", hp:"", pworld:"",                         daidata:"100957", site7:"", specialty:[], events:[] },
-  "やすだ幕張店":                { station:"幕張",    walk:5,  exchange:"", hp:"", pworld:"chiba/yasuda-makuhari",     daidata:"203072", site7:"", specialty:[], events:[] },
-  "TOHO幕張店":                  { station:"幕張",    walk:5,  exchange:"", hp:"", pworld:"",                         daidata:"203071", site7:"", specialty:[], events:[] },
-  "アスワン幕張":                { station:"幕張",    walk:5,  exchange:"", hp:"", pworld:"",                         daidata:"203111", site7:"", specialty:[], events:[] },
-  "ビックマーチ東習志野店":      { station:"幕張本郷", walk:10, exchange:"", hp:"", pworld:"",                        daidata:"",       site7:"", specialty:[], events:[] },
-  "PIA津田沼":                   { station:"津田沼",  walk:3,  exchange:"", hp:"", pworld:"",                         daidata:"203014", site7:"", specialty:[], events:[] },
-  "ニュークラウン津田沼店":      { station:"津田沼",  walk:5,  exchange:"", hp:"", pworld:"",                         daidata:"203012", site7:"", specialty:[], events:[] },
-  "ミリオン習志野店":            { station:"津田沼",  walk:10, exchange:"", hp:"", pworld:"",                         daidata:"203131", site7:"", specialty:[], events:[] },
-  "パラッツォ船橋店":            { station:"船橋",    walk:3,  exchange:"", hp:"", pworld:"chiba/palazzo-funabashi",   daidata:"100815", site7:"", specialty:[], events:[] },
-  "第一プラザ船橋店":            { station:"船橋",    walk:5,  exchange:"", hp:"", pworld:"",                         daidata:"",       site7:"", specialty:[], events:[] },
-  "アスワンFUNABASHI":           { station:"船橋",    walk:3,  exchange:"", hp:"", pworld:"",                         daidata:"203122", site7:"", specialty:[], events:[] },
-  "トワーズ船橋店":              { station:"船橋",    walk:5,  exchange:"", hp:"", pworld:"",                         daidata:"203136", site7:"", specialty:[], events:[] },
-  "ガイア西船橋店":              { station:"西船橋",  walk:3,  exchange:"", hp:"", pworld:"",                         daidata:"203145", site7:"", specialty:[], events:[] },
-  "西船スターダスト":            { station:"西船橋",  walk:5,  exchange:"", hp:"", pworld:"",                         daidata:"101371", site7:"", specialty:[], events:[] },
-  "サンパレス本八幡":            { station:"本八幡",  walk:5,  exchange:"", hp:"", pworld:"",                         daidata:"202999", site7:"", specialty:[], events:[] },
-  "本八幡UNO":                   { station:"本八幡",  walk:3,  exchange:"", hp:"", pworld:"",                         daidata:"203003", site7:"", specialty:[], events:[] },
-  "本八幡ZoRoN":                 { station:"本八幡",  walk:5,  exchange:"", hp:"", pworld:"",                         daidata:"210248", site7:"", specialty:[], events:[] },
-  "サンラッキー市川店":          { station:"市川",    walk:5,  exchange:"", hp:"", pworld:"",                         daidata:"202984", site7:"", specialty:[], events:[] },
-  "ハップス市川駅前店":          { station:"市川",    walk:1,  exchange:"", hp:"", pworld:"",                         daidata:"202990", site7:"", specialty:[], events:[] },
-  "ニュー後楽園市川店":          { station:"市川",    walk:5,  exchange:"", hp:"", pworld:"",                         daidata:"202989", site7:"", specialty:[], events:[] },
-  // ===== 東京エリア（総武線） =====
-  "Dステーション新小岩":         { station:"新小岩",  walk:3,  exchange:"", hp:"", pworld:"tokyo/dstation-shinkoiwa", daidata:"",       site7:"", specialty:[], events:[] },
-  "エスパス1300新小岩北口駅前店":{ station:"新小岩",  walk:1,  exchange:"", hp:"", pworld:"",                         daidata:"100260", site7:"", specialty:[], events:[] },
-  "プライム平井":                { station:"平井",    walk:3,  exchange:"", hp:"", pworld:"",                         daidata:"101191", site7:"", specialty:[], events:[] },
-  "キコーナ平井店":              { station:"平井",    walk:3,  exchange:"", hp:"", pworld:"",                         daidata:"203374", site7:"", specialty:[], events:[] },
-  "新ガーデン亀戸店":            { station:"亀戸",    walk:3,  exchange:"", hp:"", pworld:"",                         daidata:"203379", site7:"", specialty:[], events:[] },
-  "スパークル亀戸店":            { station:"亀戸",    walk:5,  exchange:"", hp:"", pworld:"",                         daidata:"203383", site7:"", specialty:[], events:[] },
-  "スーパーDステーション錦糸町": { station:"錦糸町",  walk:3,  exchange:"", hp:"", pworld:"",                         daidata:"",       site7:"", specialty:[], events:[] },
-  "みとやジャックポット錦糸町店":{ station:"錦糸町",  walk:3,  exchange:"", hp:"", pworld:"",                         daidata:"204071", site7:"", specialty:[], events:[] },
-  "みとや錦糸町南口店":          { station:"錦糸町",  walk:1,  exchange:"", hp:"", pworld:"",                         daidata:"101388", site7:"", specialty:[], events:[] },
-  "みとや錦糸町北口店":          { station:"錦糸町",  walk:1,  exchange:"", hp:"", pworld:"",                         daidata:"101321", site7:"", specialty:[], events:[] },
-  "ヒノマル錦糸町店":            { station:"錦糸町",  walk:3,  exchange:"", hp:"", pworld:"",                         daidata:"204070", site7:"", specialty:[], events:[] },
-  "ヒノマル錦糸町店II":          { station:"錦糸町",  walk:3,  exchange:"", hp:"", pworld:"",                         daidata:"204072", site7:"", specialty:[], events:[] },
-  "ビッグアップル秋葉原店":      { station:"秋葉原",  walk:3,  exchange:"", hp:"", pworld:"tokyo/big-apple",          daidata:"203631", site7:"", specialty:[], events:[] },
-  "アイランド秋葉原店":          { station:"秋葉原",  walk:3,  exchange:"", hp:"", pworld:"tokyo/island",             daidata:"203632", site7:"", specialty:[], events:[] },
-  "秋葉原UNO":                   { station:"秋葉原",  walk:3,  exchange:"", hp:"", pworld:"tokyo/2090uno",            daidata:"203634", site7:"", specialty:[], events:[] },
-  "エスパス日拓秋葉原駅前店":    { station:"秋葉原",  walk:1,  exchange:"", hp:"", pworld:"",                         daidata:"100928", site7:"", specialty:[], events:[] },
-  "サイバーパチンコ秋葉原昭和通り口店":{ station:"秋葉原", walk:3, exchange:"", hp:"", pworld:"",                    daidata:"203636", site7:"", specialty:[], events:[] },
-};
-
 function getPWorldLink(name) {
   const path = SHOPS[name]?.pworld;
   if (path) return `https://www.p-world.co.jp/${path}.htm`;
   return `https://www.google.com/search?q=site:p-world.co.jp+${encodeURIComponent(name)}`;
 }
-
 function getDaidataLink(name) {
   const id = SHOPS[name]?.daidata;
   if (id) return `https://daidata.goraggio.com/${id}`;
-  // IDが未登録の場合はGoogle検索（台データオンラインの店舗ページに辿り着ける）
   return `https://www.google.com/search?q=${encodeURIComponent(name + ' 台データオンライン')}`;
 }
-
 function getSite7Link(name) {
   const url = SHOPS[name]?.site7;
   if (url) return url;
-  // サイトセブンURL未登録の場合はGoogle検索
   return `https://www.google.com/search?q=${encodeURIComponent(name + ' サイトセブン')}`;
 }
-
 function shopLinksHTML(name) {
-  const mapUrl     = getMapsLink(name);
-  const webUrl     = getWebsiteLink(name);
-  const pworldUrl  = getPWorldLink(name);
-  const daidataUrl = getDaidataLink(name);
-  const site7Url   = getSite7Link(name);
   return `<div class="shop-links">
-    <a class="link-btn link-btn-map"     href="${mapUrl}"     target="_blank" rel="noopener">🗺️ マップ</a>
-    <a class="link-btn link-btn-web"     href="${webUrl}"     target="_blank" rel="noopener">🌐 公式HP</a>
-    <a class="link-btn link-btn-pworld"  href="${pworldUrl}"  target="_blank" rel="noopener">🎰 P-world</a>
-    <a class="link-btn link-btn-daidata" href="${daidataUrl}" target="_blank" rel="noopener">📊 台データ</a>
-    <a class="link-btn link-btn-site7"   href="${site7Url}"   target="_blank" rel="noopener">7️⃣ サイト7</a>
+    <a class="link-btn link-btn-map"     href="${getMapsLink(name)}"    target="_blank" rel="noopener">🗺️ マップ</a>
+    <a class="link-btn link-btn-web"     href="${getWebsiteLink(name)}" target="_blank" rel="noopener">🌐 公式HP</a>
+    <a class="link-btn link-btn-pworld"  href="${getPWorldLink(name)}"  target="_blank" rel="noopener">🎰 P-world</a>
+    <a class="link-btn link-btn-daidata" href="${getDaidataLink(name)}" target="_blank" rel="noopener">📊 台データ</a>
+    <a class="link-btn link-btn-site7"   href="${getSite7Link(name)}"   target="_blank" rel="noopener">7️⃣ サイト7</a>
   </div>`;
 }
 
@@ -418,7 +615,7 @@ function switchTab(tab) {
   document.getElementById('shop-search-results').style.display = 'none';
 }
 
-// ===== 全店舗リストを生成（サジェスト用）=====
+// ===== 全店舗リスト（サジェスト用）=====
 function getAllShops() {
   const all = [];
   for (const area of ['tokyo','chiba']) {
@@ -439,8 +636,7 @@ function onShopInput(val) {
   if (!allShops) allShops = getAllShops();
   const el = document.getElementById('suggest-list');
   if (!val.trim()) { el.innerHTML = ''; return; }
-  const q = val.trim();
-  const matched = allShops.filter(s => s.name.includes(q)).slice(0, 10);
+  const matched = allShops.filter(s => s.name.includes(val.trim())).slice(0, 10);
   if (matched.length === 0) { el.innerHTML = ''; return; }
   el.innerHTML = '<div class="suggest-list">' +
     matched.map(s =>
@@ -460,16 +656,13 @@ function doShopSearch() {
   const inputVal = document.getElementById('shop-name-input').value.trim();
   if (!inputVal) { alert('店名を入力してください'); return; }
   if (!allShops) allShops = getAllShops();
-
-  // 入力値で再マッチ（selectShopされていない場合も対応）
   const targets = allShops.filter(s => s.name.includes(inputVal));
   if (targets.length === 0) {
-    document.getElementById('shop-search-results').style.display = 'block';
-    document.getElementById('shop-search-results').innerHTML =
-      '<div class="no-result">「' + inputVal + '」に一致する店舗が見つかりませんでした</div>';
+    const el = document.getElementById('shop-search-results');
+    el.style.display = 'block';
+    el.innerHTML = '<div class="no-result">「' + inputVal + '」に一致する店舗が見つかりませんでした</div>';
     return;
   }
-
   const html = targets.map(s => renderShopDetail(s.name, s.area)).join('');
   const el = document.getElementById('shop-search-results');
   el.innerHTML = '<div class="section-title">🏪 店舗の特定日情報</div>' + html;
@@ -478,21 +671,14 @@ function doShopSearch() {
 }
 
 function renderShopDetail(name, area) {
-  // このお店が持つパターンを収集
   const patterns = [];
   for (const pat of Object.keys(DATA[area])) {
     if ((DATA[area][pat] || []).includes(name)) patterns.push(pat);
   }
   if (patterns.length === 0) return '';
-
   const patLabels = patterns.map(p => `<span class="pattern-tag">${getPatternLabel(p)}</span>`).join('');
-
-  // 直近2ヶ月の特定日を計算
-  const today = new Date();
-  today.setHours(0,0,0,0);
+  const today = new Date(); today.setHours(0,0,0,0);
   const upcomingHTML = renderUpcoming(patterns, today);
-
-  // 店舗マスター情報
   const s = SHOPS[name] || {};
   const infoHTML = (() => {
     let h = '';
@@ -501,8 +687,6 @@ function renderShopDetail(name, area) {
     if (s.specialty && s.specialty.length) h += s.specialty.map(t => `<span class="shop-info-tag specialty-tag">🏷️ ${t}</span>`).join('');
     return h ? `<div class="shop-info-row">${h}</div>` : '';
   })();
-
-  // イベント情報（静的 + localStorage）
   const savedStr = localStorage.getItem('events_' + name);
   const savedEvents = savedStr ? JSON.parse(savedStr) : [];
   const allEvents = [...(s.events || []), ...savedEvents]
@@ -511,7 +695,6 @@ function renderShopDetail(name, area) {
   const eventsHTML = allEvents.length
     ? allEvents.map(e => `<div class="event-item">📅 <span class="event-date">${e.date.slice(5).replace('-','/')}</span> ${e.name}</div>`).join('')
     : '<div class="event-empty">登録イベントなし</div>';
-
   const safeName = name.replace(/'/g, "\\'");
   return `
     <div class="shop-detail-card">
@@ -528,20 +711,16 @@ function renderShopDetail(name, area) {
       </div>
       <div class="event-list" id="evlist-${CSS.escape(name)}">${eventsHTML}</div>
       <div class="event-form" id="evform-${CSS.escape(name)}" style="display:none">
-        <input type="date" id="evdate-${CSS.escape(name)}" style="flex:1;padding:8px;border-radius:8px;border:1px solid #444;background:#0f0f1a;color:#eee">
-        <input type="text" id="evname-${CSS.escape(name)}" placeholder="イベント内容" style="flex:2;padding:8px;border-radius:8px;border:1px solid #444;background:#0f0f1a;color:#eee">
-        <button onclick="saveEvent('${safeName}')" style="padding:8px 12px;background:#f0c040;color:#111;border:none;border-radius:8px;font-weight:bold;cursor:pointer">保存</button>
-        <button onclick="cancelEventForm('${safeName}')" style="padding:8px 12px;background:#333;color:#aaa;border:none;border-radius:8px;cursor:pointer">✕</button>
+        <input type="date" id="evdate-${CSS.escape(name)}">
+        <input type="text" id="evname-${CSS.escape(name)}" placeholder="イベント内容" style="flex:2">
+        <button onclick="saveEvent('${safeName}')" style="padding:8px 12px;background:var(--color-gold);color:#111;border:none;border-radius:var(--radius-sm);font-weight:bold;cursor:pointer;font-family:var(--font-ja)">保存</button>
+        <button onclick="cancelEventForm('${safeName}')" style="padding:8px 12px;background:rgba(255,255,255,0.07);color:var(--color-muted);border:none;border-radius:var(--radius-sm);cursor:pointer;font-family:var(--font-ja)">✕</button>
       </div>
     </div>`;
 }
 
-function showEventForm(name) {
-  document.getElementById('evform-' + CSS.escape(name)).style.display = 'flex';
-}
-function cancelEventForm(name) {
-  document.getElementById('evform-' + CSS.escape(name)).style.display = 'none';
-}
+function showEventForm(name) { document.getElementById('evform-' + CSS.escape(name)).style.display = 'flex'; }
+function cancelEventForm(name) { document.getElementById('evform-' + CSS.escape(name)).style.display = 'none'; }
 function saveEvent(name) {
   const dateEl = document.getElementById('evdate-' + CSS.escape(name));
   const nameEl = document.getElementById('evname-' + CSS.escape(name));
@@ -551,10 +730,8 @@ function saveEvent(name) {
   existing.push({ date: dateEl.value, name: nameEl.value.trim() });
   existing.sort((a,b) => a.date.localeCompare(b.date));
   localStorage.setItem(key, JSON.stringify(existing));
-  dateEl.value = '';
-  nameEl.value = '';
+  dateEl.value = ''; nameEl.value = '';
   document.getElementById('evform-' + CSS.escape(name)).style.display = 'none';
-  // イベントリスト再描画
   const today = new Date().toISOString().slice(0,10);
   const s = SHOPS[name] || {};
   const allEvents = [...(s.events || []), ...existing]
@@ -565,61 +742,46 @@ function saveEvent(name) {
     : '<div class="event-empty">登録イベントなし</div>';
 }
 
+// ===== 直近特定日 =====
 function renderUpcoming(patterns, today) {
-  // 今月と来月の特定日を計算
   const months = [
     new Date(today.getFullYear(), today.getMonth(), 1),
     new Date(today.getFullYear(), today.getMonth() + 1, 1)
   ];
-
   let html = '';
   for (const monthStart of months) {
     const yr = monthStart.getFullYear();
-    const mo = monthStart.getMonth(); // 0-indexed
+    const mo = monthStart.getMonth();
     const lastDay = new Date(yr, mo + 1, 0).getDate();
     const matchDays = new Set();
-
     for (let d = 1; d <= lastDay; d++) {
       const date = new Date(yr, mo, d);
-      const ap = getActivePatterns(date);
-      if (ap.some(p => patterns.includes(p))) matchDays.add(d);
+      if (getActivePatterns(date).some(p => patterns.includes(p))) matchDays.add(d);
     }
-
     if (matchDays.size === 0) continue;
-
     const chips = [...matchDays].sort((a,b) => a-b).map(d => {
-      const dt = new Date(yr, mo, d);
-      dt.setHours(0,0,0,0);
+      const dt = new Date(yr, mo, d); dt.setHours(0,0,0,0);
       const isToday = dt.getTime() === today.getTime();
-      const isPast = dt < today;
-      if (isPast && !isToday) return '';
-      const wday = WEEKDAYS[dt.getDay()];
-      return `<span class="date-chip${isToday ? ' today' : ''}">${d}日(${wday})${isToday ? '★今日' : ''}</span>`;
+      if (dt < today && !isToday) return '';
+      return `<span class="date-chip${isToday ? ' today' : ''}">${d}日(${WEEKDAYS[dt.getDay()]})${isToday ? '★今日' : ''}</span>`;
     }).filter(Boolean).join('');
-
     if (!chips) continue;
     html += `<div class="upcoming-month">
       <div class="upcoming-month-label">${yr}年${mo+1}月</div>
       <div class="upcoming-dates">${chips}</div>
     </div>`;
   }
-  return html || '<div style="color:#666;font-size:0.85rem;">直近2ヶ月の特定日はありません</div>';
+  return html || '<div style="color:#555;font-size:0.85rem;">直近2ヶ月の特定日はありません</div>';
 }
 
 // ===== パターン計算 =====
 const WEEKDAYS = ["日","月","火","水","木","金","土"];
 
-function getPatternLabel(key, date = null) {
-  if (key.startsWith('d')) {
-    const d = key[1];
-    return d === '0' ? '0のつく日' : `${d}のつく日`;
-  }
+function getPatternLabel(key) {
+  if (key.startsWith('d')) return key[1] === '0' ? '0のつく日' : `${key[1]}のつく日`;
   if (key.startsWith('m')) return `毎月${key.slice(1)}日`;
   if (key.startsWith('w')) return `毎週${WEEKDAYS[parseInt(key[1])]}曜日`;
-  if (key.startsWith('nth_')) {
-    const [,n,w] = key.split('_');
-    return `毎月第${n}${WEEKDAYS[parseInt(w)]}曜日`;
-  }
+  if (key.startsWith('nth_')) { const [,n,w] = key.split('_'); return `毎月第${n}${WEEKDAYS[parseInt(w)]}曜日`; }
   if (key.startsWith('last_')) return `毎月最終${WEEKDAYS[parseInt(key[5])]}曜日`;
   if (key === 'zorome') return 'ゾロ目（11・22日）';
   if (key === 'md') return '月日が重なる日';
@@ -630,35 +792,15 @@ function getActivePatterns(date) {
   const day = date.getDate();
   const month = date.getMonth() + 1;
   const weekday = date.getDay();
-  const dayStr = String(day);
-  const patterns = [];
-
-  // 数字のつく日（1の位で判定）
-  const onesDigit = day % 10;
-  patterns.push(`d${onesDigit}`);
-
-  // 毎月○日
-  patterns.push(`m${day}`);
-
-  // 毎週○曜日
-  patterns.push(`w${weekday}`);
-
-  // 毎月第○△曜日
+  const patterns = [`d${day % 10}`, `m${day}`, `w${weekday}`];
   const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
   const firstOccurrence = ((weekday - firstDayOfMonth + 7) % 7) + 1;
   const nth = Math.floor((day - firstOccurrence) / 7) + 1;
   patterns.push(`nth_${nth}_${weekday}`);
-
-  // 毎月最終○曜日
   const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
   if (day + 7 > lastDay) patterns.push(`last_${weekday}`);
-
-  // ゾロ目
   if (day === 11 || day === 22) patterns.push('zorome');
-
-  // 月日が重なる
   if (month === day) patterns.push('md');
-
   return patterns;
 }
 
@@ -666,38 +808,26 @@ function getActivePatterns(date) {
 function doSearch() {
   const dateVal = document.getElementById('date-input').value;
   if (!dateVal) { alert('日付を選択してください'); return; }
-
   const date = new Date(dateVal + 'T00:00:00');
   const patterns = getActivePatterns(date);
   const areas = selectedArea === 'both' ? ['tokyo','chiba'] : [selectedArea];
-
-  // 店舗ごとにスコアとパターン名を集計
   const shopMap = {};
   for (const area of areas) {
     for (const pat of patterns) {
-      const shops = DATA[area][pat] || [];
-      for (const name of shops) {
+      for (const name of (DATA[area][pat] || [])) {
         const key = `${area}::${name}`;
         if (!shopMap[key]) shopMap[key] = { name, area, labels: [], score: 0 };
-        shopMap[key].labels.push(getPatternLabel(pat, date));
+        shopMap[key].labels.push(getPatternLabel(pat));
         shopMap[key].score++;
       }
     }
   }
-
   const sorted = Object.values(shopMap).sort((a,b) => b.score - a.score);
-
-  // 表示
-  const yyyy = date.getFullYear();
-  const mm = date.getMonth()+1;
-  const dd = date.getDate();
-  const wday = WEEKDAYS[date.getDay()];
+  const yyyy = date.getFullYear(), mm = date.getMonth()+1, dd = date.getDate();
   document.getElementById('result-label').innerHTML =
-    `<span>${yyyy}年${mm}月${dd}日（${wday}）</span> の結果`;
-
+    `<span>${yyyy}年${mm}月${dd}日（${WEEKDAYS[date.getDay()]}）</span> の結果`;
   renderRanking(sorted.slice(0,3));
   renderList(sorted);
-
   document.getElementById('results').style.display = 'block';
   document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
 }
@@ -707,10 +837,7 @@ const AREA_LABEL = { tokyo: '東京', chiba: '千葉' };
 
 function renderRanking(top) {
   const el = document.getElementById('ranking');
-  if (top.length === 0) {
-    el.innerHTML = '<div class="no-result">該当店舗がありません</div>';
-    return;
-  }
+  if (top.length === 0) { el.innerHTML = '<div class="no-result">該当店舗がありません</div>'; return; }
   el.innerHTML = top.map((s,i) => `
     <div class="rank-card rank-${i+1}">
       <div class="rank-header">
@@ -719,9 +846,7 @@ function renderRanking(top) {
         <span class="rank-area">${AREA_LABEL[s.area]}</span>
         <span class="rank-score">${s.score}パターン</span>
       </div>
-      <div class="rank-patterns">
-        ${s.labels.map(l => `<span class="pattern-tag">${l}</span>`).join('')}
-      </div>
+      <div class="rank-patterns">${s.labels.map(l => `<span class="pattern-tag">${l}</span>`).join('')}</div>
       ${shopLinksHTML(s.name)}
     </div>
   `).join('');
@@ -730,10 +855,7 @@ function renderRanking(top) {
 function renderList(shops) {
   document.getElementById('count-label').textContent = `${shops.length}店舗が該当`;
   const el = document.getElementById('shop-list');
-  if (shops.length === 0) {
-    el.innerHTML = '<div class="no-result">該当店舗がありません</div>';
-    return;
-  }
+  if (shops.length === 0) { el.innerHTML = '<div class="no-result">該当店舗がありません</div>'; return; }
   el.innerHTML = shops.map((s,i) => `
     <div class="shop-row">
       <span class="shop-rank-num">${i+1}</span>

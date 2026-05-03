@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>駅別店舗一覧 | 総武線パチンコ攻略（千葉〜秋葉原）</title>
+<meta name="description" content="総武線沿い（千葉〜秋葉原）20駅のパチンコ店舗を駅別に検索。徒歩分・台データへの直リンク付き。">
+<style>
+:root {
+  --bg-base:      #0a0a14;
+  --bg-card:      rgba(18, 18, 36, 0.85);
+  --color-gold:   #f0c040;
+  --color-gold2:  #e08020;
+  --color-cyan:   #00d4ff;
+  --color-red:    #ff3a3a;
+  --color-text:   #e8e8f0;
+  --color-muted:  #8888aa;
+  --color-border: rgba(240, 192, 64, 0.25);
+  --glow-gold:    0 0 16px rgba(240, 192, 64, 0.35);
+  --glow-cyan:    0 0 16px rgba(0, 212, 255, 0.35);
+  --radius-sm:    8px;
+  --radius-md:    14px;
+  --gap-sm:       8px;
+  --gap-md:       16px;
+  --gap-lg:       24px;
+  --font-ja:      'Hiragino Sans', 'Meiryo', 'Yu Gothic', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font-ja);
+  background: var(--bg-base);
+  color: var(--color-text);
+  min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse at 20% 30%, rgba(0,212,255,0.04) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 70%, rgba(240,192,64,0.04) 0%, transparent 55%);
+}
+
+/* NAV */
+.site-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(8, 8, 18, 0.92);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--color-border);
+  display: flex; align-items: center; gap: 4px;
+  padding: 0 var(--gap-md); height: 52px;
+}
+.nav-brand {
+  font-size: 0.95rem; font-weight: bold;
+  color: var(--color-gold); text-decoration: none;
+  flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  text-shadow: var(--glow-gold);
+}
+.site-nav a.nav-link {
+  color: var(--color-muted); text-decoration: none;
+  font-size: 0.8rem; padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  transition: color 0.2s, background 0.2s; white-space: nowrap;
+}
+.site-nav a.nav-link:hover, .site-nav a.nav-link.active {
+  color: var(--color-gold); background: rgba(240, 192, 64, 0.08);
+}
+
+/* LAYOUT */
+.page-container { max-width: 640px; margin: 0 auto; padding: 0 var(--gap-md) 60px; }
+.page-hero { text-align: center; padding: 32px 0 20px; }
+.hero-icon { font-size: 2.8rem; margin-bottom: 8px; filter: drop-shadow(0 0 12px rgba(0,212,255,0.5)); }
+.page-hero h1 {
+  font-size: 1.5rem; font-weight: bold; color: var(--color-gold);
+  margin-bottom: 6px; text-shadow: var(--glow-gold); letter-spacing: 0.02em;
+}
+.page-hero p { font-size: 0.85rem; color: var(--color-muted); }
+
+/* LINE INDICATOR */
+.line-bar {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 20px; padding: 12px var(--gap-md);
+  background: rgba(240,192,64,0.04);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.line-dot {
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--color-gold);
+  box-shadow: var(--glow-gold); flex-shrink: 0;
+}
+.line-bar-text { font-size: 0.82rem; color: var(--color-muted); }
+.line-bar-text strong { color: var(--color-gold); }
+
+/* STATION GRID */
+.station-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--gap-md);
+}
+
+/* STATION CARD */
+.station-card {
+  position: relative;
+  text-decoration: none;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center;
+  padding: 20px var(--gap-md);
+  background: rgba(18, 18, 36, 0.85);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255,255,255,0.07);
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  min-height: 90px;
+}
+.station-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--glow-cyan);
+  border-color: rgba(0,212,255,0.35);
+}
+.station-card__icon { font-size: 1.3rem; margin-bottom: 6px; }
+.station-card__name {
+  font-size: 1rem; font-weight: bold;
+  color: var(--color-gold); margin-bottom: 4px;
+}
+.station-card__count {
+  font-size: 0.75rem; color: var(--color-muted);
+}
+.station-card__count span {
+  color: var(--color-cyan); font-weight: bold;
+}
+
+/* No shops state */
+.station-card--no-shops {
+  opacity: 0.35;
+  pointer-events: none;
+  cursor: default;
+}
+.station-card--no-shops .station-card__name { color: var(--color-muted); }
+
+/* ORDER NUMBER */
+.station-order {
+  position: absolute; top: 8px; left: 10px;
+  font-size: 0.65rem; color: #444; font-weight: bold;
+}
+
+/* FOOTER */
+.site-footer {
+  text-align: center; padding: 24px var(--gap-md);
+  color: #444; font-size: 0.75rem;
+  border-top: 1px solid rgba(255,255,255,0.04); margin-top: 20px;
+}
+
+@media (max-width: 360px) {
+  .site-nav { gap: 2px; }
+  .site-nav a.nav-link { padding: 6px 7px; font-size: 0.75rem; }
+  .station-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="index.html" class="nav-brand">🎰 総武線パチンコ攻略</a>
+  <a href="index.html" class="nav-link">トップ</a>
+  <a href="index.html#checker-section" class="nav-link">特定日</a>
+  <a href="stations.html" class="nav-link active">駅別店舗</a>
+</nav>
+
+<div class="page-container">
+  <div class="page-hero">
+    <div class="hero-icon">🚉</div>
+    <h1>駅別店舗一覧</h1>
+    <p>千葉〜秋葉原 全20駅</p>
+  </div>
+
+  <div class="line-bar">
+    <div class="line-dot"></div>
+    <div class="line-bar-text">JR総武線 <strong>各駅停車</strong>（千葉 → 秋葉原）／<strong>20駅</strong></div>
+  </div>
+
+  <div class="station-grid" id="station-grid">
+    <!-- JS で生成 -->
+  </div>
+</div>
+
+<footer class="site-footer">
+  © 2025 総武線パチンコ攻略 — 千葉〜秋葉原 特定日情報
+</footer>
+
+<script src="data.js"></script>
+<script>
+function buildStationGrid() {
+  const grid = document.getElementById('station-grid');
+
+  // 駅ごとの店舗数を集計
+  const shopCountByStation = {};
+  for (const shopData of Object.values(SHOPS)) {
+    const st = shopData.station;
+    shopCountByStation[st] = (shopCountByStation[st] || 0) + 1;
+  }
+
+  grid.innerHTML = STATIONS.map((st, i) => {
+    const count = shopCountByStation[st.ja] || 0;
+    const noShops = count === 0;
+    const href = `station.html?s=${st.id}`;
+
+    return `
+      <a href="${noShops ? '#' : href}"
+         class="station-card ${noShops ? 'station-card--no-shops' : ''}"
+         ${noShops ? 'aria-disabled="true" tabindex="-1"' : ''}>
+        <span class="station-order">${i + 1}</span>
+        <div class="station-card__icon">🚉</div>
+        <div class="station-card__name">${st.ja}</div>
+        <div class="station-card__count">
+          ${count > 0
+            ? `<span>${count}</span> 店舗`
+            : '情報なし'}
+        </div>
+      </a>`;
+  }).join('');
+}
+
+buildStationGrid();
+</script>
+</body>
+</html>

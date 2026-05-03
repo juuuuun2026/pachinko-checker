@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="page-title">駅の店舗 | 総武線パチンコ攻略</title>
+<meta name="description" id="page-desc" content="総武線沿い パチンコ店舗情報">
+<style>
+:root {
+  --bg-base:      #0a0a14;
+  --bg-card:      rgba(18, 18, 36, 0.85);
+  --color-gold:   #f0c040;
+  --color-gold2:  #e08020;
+  --color-cyan:   #00d4ff;
+  --color-red:    #ff3a3a;
+  --color-text:   #e8e8f0;
+  --color-muted:  #8888aa;
+  --color-border: rgba(240, 192, 64, 0.25);
+  --glow-gold:    0 0 16px rgba(240, 192, 64, 0.35);
+  --glow-cyan:    0 0 16px rgba(0, 212, 255, 0.35);
+  --radius-sm:    8px;
+  --radius-md:    14px;
+  --gap-sm:       8px;
+  --gap-md:       16px;
+  --gap-lg:       24px;
+  --font-ja:      'Hiragino Sans', 'Meiryo', 'Yu Gothic', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font-ja);
+  background: var(--bg-base);
+  color: var(--color-text);
+  min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse at 10% 60%, rgba(255,58,58,0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 20%, rgba(240,192,64,0.04) 0%, transparent 55%);
+}
+
+/* NAV */
+.site-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(8, 8, 18, 0.92);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--color-border);
+  display: flex; align-items: center; gap: 4px;
+  padding: 0 var(--gap-md); height: 52px;
+}
+.nav-brand {
+  font-size: 0.95rem; font-weight: bold;
+  color: var(--color-gold); text-decoration: none;
+  flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  text-shadow: var(--glow-gold);
+}
+.site-nav a.nav-link {
+  color: var(--color-muted); text-decoration: none;
+  font-size: 0.8rem; padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  transition: color 0.2s, background 0.2s; white-space: nowrap;
+}
+.site-nav a.nav-link:hover, .site-nav a.nav-link.active {
+  color: var(--color-gold); background: rgba(240, 192, 64, 0.08);
+}
+
+/* LAYOUT */
+.page-container { max-width: 640px; margin: 0 auto; padding: 0 var(--gap-md) 60px; }
+
+/* BACK LINK */
+.back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: var(--color-muted); text-decoration: none;
+  font-size: 0.85rem; padding: 16px 0 8px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--color-gold); }
+
+/* HERO */
+.page-hero { padding: 8px 0 24px; }
+.page-hero h1 {
+  font-size: 1.6rem; font-weight: bold; color: var(--color-gold);
+  margin-bottom: 6px; text-shadow: var(--glow-gold);
+}
+.page-hero p { font-size: 0.85rem; color: var(--color-muted); }
+.shop-count-label {
+  display: inline-block; margin-top: 10px;
+  font-size: 0.8rem; color: var(--color-cyan);
+  background: rgba(0,212,255,0.08);
+  border: 1px solid rgba(0,212,255,0.2);
+  padding: 3px 12px; border-radius: 20px;
+}
+
+/* SHOP CARD */
+.shop-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: var(--radius-md);
+  padding: var(--gap-md);
+  margin-bottom: var(--gap-md);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.shop-card:hover {
+  border-color: var(--color-border);
+  box-shadow: 0 0 20px rgba(240,192,64,0.08);
+}
+.shop-card__name {
+  font-size: 1.1rem; font-weight: bold; color: #fff; margin-bottom: 10px;
+}
+.shop-card__meta {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px;
+}
+.meta-tag {
+  font-size: 0.78rem;
+  background: rgba(255,255,255,0.05);
+  color: var(--color-muted);
+  padding: 4px 10px; border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.meta-tag--walk  { color: var(--color-cyan);  background: rgba(0,212,255,0.07);  border-color: rgba(0,212,255,0.2); }
+.meta-tag--hours { color: #8ddc8a;             background: rgba(141,220,138,0.07); border-color: rgba(141,220,138,0.2); }
+.meta-tag--total { color: var(--color-gold);   background: rgba(240,192,64,0.07); border-color: rgba(240,192,64,0.2); }
+
+/* ACTION BUTTONS */
+.shop-actions {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+}
+.action-btn {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 10px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem; font-weight: bold;
+  text-decoration: none;
+  transition: opacity 0.15s, transform 0.1s;
+}
+.action-btn:active { opacity: 0.8; transform: scale(0.98); }
+.action-btn--checker {
+  background: rgba(240,192,64,0.1);
+  color: var(--color-gold);
+  border: 1px solid rgba(240,192,64,0.3);
+}
+.action-btn--checker:hover { background: rgba(240,192,64,0.18); }
+.action-btn--daidata {
+  background: rgba(192,122,255,0.1);
+  color: #c07aff;
+  border: 1px solid rgba(192,122,255,0.3);
+}
+.action-btn--daidata:hover { background: rgba(192,122,255,0.18); }
+
+/* EMPTY STATE */
+.no-shops-msg {
+  text-align: center; padding: 60px var(--gap-md);
+  color: var(--color-muted);
+}
+.no-shops-msg .no-shops-icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.5; }
+.no-shops-msg p { font-size: 0.9rem; line-height: 1.7; }
+
+/* ERROR STATE */
+.error-msg { text-align: center; padding: 60px var(--gap-md); color: #ff6666; }
+
+/* DIVIDER */
+.section-divider {
+  font-size: 0.78rem; color: var(--color-muted);
+  margin: 20px 0 12px; padding-left: 2px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-divider::after {
+  content: '';  flex: 1;
+  height: 1px; background: rgba(255,255,255,0.06);
+}
+
+/* FOOTER */
+.site-footer {
+  text-align: center; padding: 24px var(--gap-md);
+  color: #444; font-size: 0.75rem;
+  border-top: 1px solid rgba(255,255,255,0.04); margin-top: 20px;
+}
+
+@media (max-width: 360px) {
+  .site-nav { gap: 2px; }
+  .site-nav a.nav-link { padding: 6px 7px; font-size: 0.75rem; }
+  .shop-actions { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="index.html" class="nav-brand">🎰 総武線パチンコ攻略</a>
+  <a href="index.html" class="nav-link">トップ</a>
+  <a href="index.html#checker-section" class="nav-link">特定日</a>
+  <a href="stations.html" class="nav-link active">駅別店舗</a>
+</nav>
+
+<div class="page-container">
+  <a href="stations.html" class="back-link">← 駅一覧に戻る</a>
+
+  <div class="page-hero" id="station-hero">
+    <!-- JS で生成 -->
+  </div>
+
+  <div id="shop-cards">
+    <!-- JS で生成 -->
+  </div>
+</div>
+
+<footer class="site-footer">
+  © 2025 総武線パチンコ攻略 — 千葉〜秋葉原 特定日情報
+</footer>
+
+<script src="data.js"></script>
+<script>
+function getDaidataLink(name) {
+  const id = SHOPS[name]?.daidata;
+  if (id) return `https://daidata.goraggio.com/${id}`;
+  return `https://www.google.com/search?q=${encodeURIComponent(name + ' 台データオンライン')}`;
+}
+
+function renderStationPage() {
+  const params = new URLSearchParams(location.search);
+  const stationId = params.get('s');
+  const station = STATIONS.find(s => s.id === stationId);
+
+  if (!station) {
+    document.getElementById('station-hero').innerHTML =
+      '<div class="error-msg">⚠️ 駅が見つかりません。<br><a href="stations.html" style="color:var(--color-gold)">駅一覧に戻る</a></div>';
+    return;
+  }
+
+  const stationJa = station.ja;
+
+  // SEO
+  document.getElementById('page-title').textContent =
+    `${stationJa}駅のパチンコ店舗 | 総武線パチンコ攻略`;
+  document.getElementById('page-desc').setAttribute('content',
+    `${stationJa}駅周辺のパチンコ店舗一覧。徒歩分・特定日情報・台データオンラインへのリンク付き。`);
+
+  // 該当駅の店舗を抽出して徒歩分昇順ソート
+  const stationShops = Object.entries(SHOPS)
+    .filter(([, data]) => data.station === stationJa)
+    .sort(([, a], [, b]) => a.walk - b.walk);
+
+  // ヒーロー
+  document.getElementById('station-hero').innerHTML = `
+    <h1>🚉 ${stationJa}駅</h1>
+    <p>周辺のパチンコ・スロット店舗</p>
+    ${stationShops.length > 0
+      ? `<span class="shop-count-label">${stationShops.length}店舗</span>`
+      : ''}`;
+
+  const container = document.getElementById('shop-cards');
+
+  if (stationShops.length === 0) {
+    container.innerHTML = `
+      <div class="no-shops-msg">
+        <div class="no-shops-icon">🔍</div>
+        <p>この駅の店舗情報はまだ登録されていません。<br>
+           <a href="stations.html" style="color:var(--color-gold);text-decoration:none;">← 他の駅を見る</a></p>
+      </div>`;
+    return;
+  }
+
+  // 千葉・東京エリアでグループ分け
+  const chibaStations = ["千葉","西千葉","稲毛","新検見川","幕張","幕張本郷","津田沼","東船橋","船橋","西船橋","市川","本八幡","小岩"];
+  const area = chibaStations.includes(stationJa) ? 'chiba' : 'tokyo';
+
+  container.innerHTML = stationShops.map(([name, data]) => {
+    const checkerUrl = `index.html?shop=${encodeURIComponent(name)}`;
+    const daidataUrl = getDaidataLink(name);
+
+    const hoursTag = data.hours
+      ? `<span class="meta-tag meta-tag--hours">🕐 ${data.hours}</span>`
+      : `<span class="meta-tag">🕐 営業時間 要確認</span>`;
+    const totalTag = data.total
+      ? `<span class="meta-tag meta-tag--total">🎰 ${data.total}台</span>`
+      : `<span class="meta-tag">🎰 台数 要確認</span>`;
+
+    return `
+      <div class="shop-card">
+        <div class="shop-card__name">${name}</div>
+        <div class="shop-card__meta">
+          <span class="meta-tag meta-tag--walk">🚶 徒歩${data.walk}分</span>
+          ${hoursTag}
+          ${totalTag}
+        </div>
+        <div class="shop-actions">
+          <a class="action-btn action-btn--checker" href="${checkerUrl}">
+            📅 特定日チェッカー
+          </a>
+          <a class="action-btn action-btn--daidata" href="${daidataUrl}"
+             target="_blank" rel="noopener">
+            📊 台データオンライン
+          </a>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+renderStationPage();
+</script>
+</body>
+</html>
