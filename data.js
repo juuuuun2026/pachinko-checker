@@ -71,7 +71,7 @@ const SHOPS = {
   "ビッグアップル秋葉原店":      { station:"秋葉原",  walk:3,  exchange:"", hp:"", pworld:"tokyo/big-apple",          daidata:"203631", site7:"", specialty:[], events:[], hours:"", total:"" },
   "アイランド秋葉原店":          { station:"秋葉原",  walk:3,  exchange:"", hp:"", pworld:"tokyo/island",             daidata:"203632", site7:"", specialty:[], events:[], hours:"", total:"" },
   "秋葉原UNO":                   { station:"秋葉原",  walk:3,  exchange:"", hp:"", pworld:"tokyo/2090uno",            daidata:"203634", site7:"", specialty:[], events:[], hours:"", total:"" },
-  "エスパス日拓秋葉原駅前店":    { station:"秋葉原",  walk:1,  exchange:"", hp:"", pworld:"",         daidata:"100928", site7:"", specialty:[], events:[], hours:"", total:"" },
+  "エスパス日拓秋葉原駅前店":    { station:"秋葉原",  walk:1,  exchange:"", hp:"", pworld:"tokyo/espace-akb",         daidata:"100928", site7:"", specialty:[], events:[], hours:"", total:"" },
   "サイバーパチンコ秋葉原昭和通り口店":{ station:"秋葉原", walk:3, exchange:"", hp:"", pworld:"tokyo/cy-akihabara",   daidata:"203636", site7:"", specialty:[], events:[], hours:"", total:"" },
 };
 
