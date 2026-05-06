@@ -51,18 +51,28 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; }
 
-/* NAV */
+/* NAV (Premium) */
 .site-nav {
   position: sticky; top: 0; z-index: 200;
-  background: var(--white); border-bottom: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 2px 12px rgba(15,23,42,0.06);
   display: flex; align-items: center; gap: 4px;
   padding: 0 20px; height: 58px;
+  background-color: #fbfbfd;
+  background-image:
+    linear-gradient(180deg, #ffffff 0%, #fbfbfd 100%),
+    var(--gold-grad);
+  background-size: 100% calc(100% - 2px), 100% 2px;
+  background-position: top, bottom;
+  background-repeat: no-repeat;
 }
 .nav-brand {
-  font-size: 1rem; font-weight: 800; color: var(--primary);
+  font-size: 1.02rem; font-weight: 800; letter-spacing: -0.01em;
   text-decoration: none; flex: 1;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 60%, #2563eb 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 .nav-link {
   color: var(--text-sub); text-decoration: none;
@@ -85,18 +95,29 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
 }
 .back-link:hover { color: var(--primary); }
 
-/* HERO */
-.page-hero { padding: 8px 0 24px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
-.page-hero h1 {
-  font-size: 1.5rem; font-weight: 900; color: var(--text);
-  letter-spacing: -0.02em; margin-bottom: 5px;
+/* HERO (Premium) */
+.page-hero {
+  position: relative;
+  padding: 12px 0 26px;
+  border-bottom: 1px solid var(--border); margin-bottom: 22px;
 }
-.page-hero p { font-size: 0.84rem; color: var(--text-sub); }
+.page-hero::after {
+  content: ""; position: absolute; left: 0; bottom: -1px;
+  width: 56px; height: 3px; border-radius: 2px;
+  background: var(--gold-grad);
+}
+.page-hero h1 {
+  font-size: 1.55rem; font-weight: 900; color: var(--text);
+  letter-spacing: -0.02em; margin-bottom: 6px;
+}
+.page-hero p { font-size: 0.85rem; color: var(--text-sub); letter-spacing: 0.02em; }
 .shop-count-label {
-  display: inline-block; margin-top: 10px;
-  font-size: 0.78rem; color: var(--primary);
-  background: var(--primary-bg); border: 1px solid var(--primary-br);
-  padding: 4px 14px; border-radius: 20px; font-weight: 600;
+  display: inline-block; margin-top: 12px;
+  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.05em;
+  color: var(--gold-d);
+  background: var(--gold-bg); border: 1px solid var(--gold-br);
+  padding: 4px 14px; border-radius: 20px;
+  box-shadow: 0 2px 6px rgba(201,161,74,0.15);
 }
 
 /* SHOP CARD */
@@ -144,12 +165,27 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
 }
 .action-btn:hover  { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
 .action-btn:active { transform: scale(.97); }
-.action-btn--checker { color: var(--primary); background: var(--primary-bg); border-color: var(--primary-br); }
-.action-btn--checker:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
-.action-btn--pworld  { color: var(--accent); background: var(--accent-bg); border-color: var(--accent-br); }
-.action-btn--pworld:hover  { background: var(--accent); color: #fff; border-color: var(--accent); }
-.action-btn--daidata { color: #7c3aed; background: #f5f3ff; border-color: #c4b5fd; }
-.action-btn--daidata:hover { background: #7c3aed; color: #fff; border-color: #7c3aed; }
+.action-btn--checker {
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary-l) 0%, var(--primary) 100%);
+  border-color: var(--primary);
+  box-shadow: 0 3px 10px rgba(29,78,216,0.25);
+}
+.action-btn--checker:hover { box-shadow: 0 6px 16px rgba(29,78,216,0.35); filter: brightness(1.05); }
+.action-btn--pworld {
+  color: #fff;
+  background: linear-gradient(135deg, #d97706 0%, var(--accent) 100%);
+  border-color: var(--accent);
+  box-shadow: 0 3px 10px rgba(180,83,9,0.25);
+}
+.action-btn--pworld:hover  { box-shadow: 0 6px 16px rgba(180,83,9,0.35); filter: brightness(1.05); }
+.action-btn--daidata {
+  color: #fff;
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  border-color: #7c3aed;
+  box-shadow: 0 3px 10px rgba(124,58,237,0.25);
+}
+.action-btn--daidata:hover { box-shadow: 0 6px 16px rgba(124,58,237,0.35); filter: brightness(1.05); }
 
 /* EMPTY / ERROR */
 .no-shops-msg { text-align: center; padding: 60px 16px; color: var(--text-muted); }
@@ -157,12 +193,23 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
 .no-shops-msg p { font-size: 0.9rem; line-height: 1.7; }
 .error-msg { text-align: center; padding: 60px 16px; color: #dc2626; }
 
-/* FOOTER */
+/* FOOTER (Premium) */
 .site-footer {
-  background: var(--white); border-top: 1px solid var(--border);
-  padding: 32px 20px 28px; text-align: center;
+  position: relative;
+  background: linear-gradient(180deg, #fbfbfd 0%, #f1f5f9 100%);
+  border-top: 1px solid var(--border);
+  padding: 36px 20px 28px; text-align: center;
 }
-.footer-brand { font-size: 1rem; font-weight: 800; color: var(--primary); margin-bottom: 12px; }
+.site-footer::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px;
+  background: var(--gold-grad); opacity: .7;
+}
+.footer-brand {
+  font-size: 1.05rem; font-weight: 800; margin-bottom: 14px; letter-spacing: -0.01em;
+  background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 60%, #2563eb 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 .footer-links { display: flex; gap: 24px; justify-content: center; margin-bottom: 10px; }
 .footer-links a { font-size: .78rem; color: var(--text-sub); text-decoration: none; transition: color .15s; }
 .footer-links a:hover { color: var(--primary); }
@@ -204,7 +251,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
     <a href="stations.html">駅別店舗</a>
   </div>
   <div class="footer-desc">千葉〜秋葉原 全20駅 約40店舗のイベント日・店舗情報を無料提供</div>
-  <div class="footer-copy">© 2025 総武線パチンコ攻略</div>
+  <div class="footer-copy">© 2025 総武線パチンコナビ</div>
 </footer>
 
 <script src="data.js"></script>

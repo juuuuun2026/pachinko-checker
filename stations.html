@@ -43,18 +43,28 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; }
 
-/* NAV */
+/* NAV (Premium) */
 .site-nav {
   position: sticky; top: 0; z-index: 200;
-  background: var(--white); border-bottom: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 2px 12px rgba(15,23,42,0.06);
   display: flex; align-items: center; gap: 4px;
   padding: 0 20px; height: 58px;
+  background-color: #fbfbfd;
+  background-image:
+    linear-gradient(180deg, #ffffff 0%, #fbfbfd 100%),
+    var(--gold-grad);
+  background-size: 100% calc(100% - 2px), 100% 2px;
+  background-position: top, bottom;
+  background-repeat: no-repeat;
 }
 .nav-brand {
-  font-size: 1rem; font-weight: 800; color: var(--primary);
+  font-size: 1.02rem; font-weight: 800; letter-spacing: -0.01em;
   text-decoration: none; flex: 1;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 60%, #2563eb 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 .nav-link {
   color: var(--text-sub); text-decoration: none;
@@ -68,43 +78,64 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
 /* LAYOUT */
 .page-wrap { max-width: 680px; margin: 0 auto; padding: 0 20px 80px; }
 
-/* HERO */
+/* HERO (Premium) */
 .page-hero {
-  padding: 36px 0 28px; text-align: center;
+  position: relative;
+  padding: 40px 0 32px; text-align: center;
   border-bottom: 1px solid var(--border); margin-bottom: 24px;
 }
-.hero-icon { font-size: 2.6rem; margin-bottom: 10px; display: block; }
-.page-hero h1 {
-  font-size: 1.55rem; font-weight: 900; color: var(--text);
-  letter-spacing: -0.02em; margin-bottom: 6px;
+.page-hero::after {
+  content: ""; position: absolute; left: 50%; bottom: -1px; transform: translateX(-50%);
+  width: 80px; height: 3px; border-radius: 2px;
+  background: var(--gold-grad);
 }
-.page-hero p { font-size: 0.85rem; color: var(--text-sub); }
+.hero-icon {
+  font-size: 2.4rem; margin-bottom: 10px; display: inline-block;
+  width: 72px; height: 72px; line-height: 72px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-bg) 0%, #dbeafe 100%);
+  border: 1px solid var(--primary-br);
+  box-shadow: 0 8px 22px rgba(29,78,216,0.12);
+}
+.page-hero h1 {
+  font-size: 1.6rem; font-weight: 900; color: var(--text);
+  letter-spacing: -0.02em; margin: 12px 0 6px;
+}
+.page-hero p { font-size: 0.86rem; color: var(--text-sub); letter-spacing: 0.02em; }
 
-/* LINE BAR */
+/* LINE BAR (Premium) */
 .line-bar {
   display: flex; align-items: center; gap: 12px;
-  padding: 12px 16px; margin-bottom: 20px;
-  background: var(--white); border: 1px solid var(--border);
-  border-radius: var(--r-l); box-shadow: var(--shadow-sm);
+  padding: 14px 18px; margin-bottom: 22px;
+  background: linear-gradient(180deg, #fdfdff 0%, var(--white) 100%);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold);
+  border-radius: var(--r-l); box-shadow: var(--shadow-premium);
 }
 .line-dot {
   width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0;
-  background: var(--primary);
+  background: var(--gold-grad);
+  box-shadow: 0 0 0 3px var(--gold-bg), 0 0 12px rgba(201,161,74,0.5);
 }
-.line-bar-text { font-size: 0.83rem; color: var(--text-sub); }
-.line-bar-text strong { color: var(--primary); }
+.line-bar-text { font-size: 0.84rem; color: var(--text-sub); }
+.line-bar-text strong { color: var(--primary); font-weight: 700; }
 
-/* SEC HEAD */
+/* SEC HEAD (Premium) */
 .sec-head {
+  position: relative;
   display: flex; align-items: center; gap: 10px;
-  margin-bottom: 14px; padding-bottom: 10px;
-  border-bottom: 2px solid var(--border);
+  margin-bottom: 16px; padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
 }
-.sec-head h2 { font-size: 0.95rem; font-weight: 800; color: var(--text); }
+.sec-head::after {
+  content: ""; position: absolute; left: 0; bottom: -1px;
+  width: 56px; height: 3px; border-radius: 2px;
+  background: var(--gold-grad);
+}
+.sec-head h2 { font-size: 1rem; font-weight: 800; color: var(--text); letter-spacing: -0.01em; }
 .sec-badge {
   margin-left: auto; font-size: 0.68rem; font-weight: 700;
   letter-spacing: 0.1em; padding: 3px 10px; border-radius: 20px;
-  background: var(--primary-bg); color: var(--primary); border: 1px solid var(--primary-br);
+  background: var(--gold-bg); color: var(--gold-d); border: 1px solid var(--gold-br);
 }
 
 /* STATION GRID */
@@ -151,12 +182,23 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
   font-size: 0.62rem; color: var(--text-muted); font-weight: 600;
 }
 
-/* FOOTER */
+/* FOOTER (Premium) */
 .site-footer {
-  background: var(--white); border-top: 1px solid var(--border);
-  padding: 32px 20px 28px; text-align: center;
+  position: relative;
+  background: linear-gradient(180deg, #fbfbfd 0%, #f1f5f9 100%);
+  border-top: 1px solid var(--border);
+  padding: 36px 20px 28px; text-align: center;
 }
-.footer-brand { font-size: 1rem; font-weight: 800; color: var(--primary); margin-bottom: 12px; }
+.site-footer::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px;
+  background: var(--gold-grad); opacity: .7;
+}
+.footer-brand {
+  font-size: 1.05rem; font-weight: 800; margin-bottom: 14px; letter-spacing: -0.01em;
+  background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 60%, #2563eb 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 .footer-links { display: flex; gap: 24px; justify-content: center; margin-bottom: 10px; }
 .footer-links a { font-size: .78rem; color: var(--text-sub); text-decoration: none; transition: color .15s; }
 .footer-links a:hover { color: var(--primary); }
@@ -206,7 +248,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
     <a href="stations.html">駅別店舗</a>
   </div>
   <div class="footer-desc">千葉〜秋葉原 全20駅 約40店舗のイベント日・店舗情報を無料提供</div>
-  <div class="footer-copy">© 2025 総武線パチンコ攻略</div>
+  <div class="footer-copy">© 2025 総武線パチンコナビ</div>
 </footer>
 
 <script src="data.js"></script>
