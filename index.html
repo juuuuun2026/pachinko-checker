@@ -539,7 +539,7 @@ body {
     <div class="tip-card">
       <div class="tip-icon">🎯</div>
       <h3>特定日を狙う</h3>
-      <p>各店の特定日パターンを把握。確率が上がるタイミングに合わせて来店。</p>
+      <p>各店のイベント日パターンを把握。出玉が期待できるタイミングに合わせて来店。</p>
     </div>
     <div class="tip-card">
       <div class="tip-icon">📊</div>
@@ -573,14 +573,14 @@ body {
         <button class="area-btn" data-area="chiba" onclick="selectArea(this)">千葉</button>
         <button class="area-btn" data-area="both" onclick="selectArea(this)">両方</button>
       </div>
-      <button class="btn-primary" onclick="doSearch()">🔍 この日の特定日を検索</button>
+      <button class="btn-primary" onclick="doSearch()">🔍 この日の高確率店を検索</button>
     </div>
 
     <div class="glass-card" id="shop-search-box" style="display:none">
       <label>🏪 店名を入力（一部でもOK）</label>
       <input type="text" id="shop-name-input" placeholder="例：みとや、エスパス、PIA..." oninput="onShopInput(this.value)">
       <div id="suggest-list"></div>
-      <button class="btn-primary" onclick="doShopSearch()">🔍 この店の特定日を見る</button>
+      <button class="btn-primary" onclick="doShopSearch()">🔍 この店のイベント日を調べる</button>
     </div>
 
     <div id="shop-search-results"></div>
@@ -773,7 +773,7 @@ function renderShopDetail(name, area) {
       </div>
       ${infoHTML}
       ${shopLinksHTML(name)}
-      <div class="shop-detail-section">📅 特定日パターン
+      <div class="shop-detail-section">📅 イベント日パターン（特定日）
         <button class="cal-toggle-btn" id="caltoggle-${CSS.escape(name)}" onclick="toggleCalendar('${safeName}')">📅 カレンダー</button>
       </div>
       <div class="shop-detail-patterns">${patLabels}</div>
@@ -972,7 +972,7 @@ function renderMyShops() {
     const safeName = name.replace(/'/g, "\\'");
     return `<div class="fav-item">
       <div class="fav-item-name">${name}</div>
-      <a class="fav-item-link" href="index.html?shop=${encodeURIComponent(name)}">特定日</a>
+      <a class="fav-item-link" href="index.html?shop=${encodeURIComponent(name)}">特定日を調べる →</a>
       <button class="fav-btn active" data-name="${name}" onclick="toggleFav('${safeName}')" title="お気に入り解除">⭐</button>
     </div>`;
   }).join('');
