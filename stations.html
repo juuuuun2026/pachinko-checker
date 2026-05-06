@@ -31,6 +31,12 @@
   --border-d:   #cbd5e1;
   --shadow-sm:  0 1px 3px rgba(0,0,0,0.07);
   --shadow-md:  0 4px 16px rgba(0,0,0,0.08);
+  --shadow-premium:       0 8px 28px rgba(15,23,42,0.10), 0 2px 6px rgba(15,23,42,0.06);
+  --shadow-premium-hover: 0 14px 40px rgba(15,23,42,0.14), 0 4px 10px rgba(15,23,42,0.08);
+  --gold:      #c9a14a;
+  --gold-bg:   #fdf8eb;
+  --gold-br:   #ecd9a3;
+  --gold-grad: linear-gradient(135deg, #e0bf6e 0%, #c9a14a 50%, #9a7a2e 100%);
   --r-s: 6px; --r-m: 10px; --r-l: 14px;
   --font: 'Hiragino Sans','Meiryo','Yu Gothic',sans-serif;
 }
@@ -110,18 +116,23 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
 
 /* STATION CARD */
 .station-card {
-  position: relative; text-decoration: none;
+  position: relative; overflow: hidden; text-decoration: none;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   text-align: center; padding: 22px 12px;
-  background: var(--white); border-radius: var(--r-l);
-  border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+  background: linear-gradient(180deg, #fdfdff 0%, var(--white) 100%);
+  border-radius: var(--r-l);
+  border: 1px solid var(--border); box-shadow: var(--shadow-premium);
   transition: transform .2s, box-shadow .2s, border-color .2s;
   min-height: 96px;
 }
 .station-card:hover {
   transform: translateY(-3px);
-  box-shadow: var(--shadow-md);
-  border-color: var(--primary-br);
+  box-shadow: var(--shadow-premium-hover);
+  border-color: var(--gold-br);
+}
+.station-card:not(.station-card--no-shops):hover::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--gold-grad);
 }
 .station-card__icon { font-size: 1.3rem; margin-bottom: 6px; }
 .station-card__name { font-size: 1rem; font-weight: 700; color: var(--primary); margin-bottom: 4px; }

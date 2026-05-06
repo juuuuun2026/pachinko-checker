@@ -39,6 +39,12 @@
   --border-d:   #cbd5e1;
   --shadow-sm:  0 1px 3px rgba(0,0,0,0.07);
   --shadow-md:  0 4px 16px rgba(0,0,0,0.08);
+  --shadow-premium:       0 8px 28px rgba(15,23,42,0.10), 0 2px 6px rgba(15,23,42,0.06);
+  --shadow-premium-hover: 0 14px 40px rgba(15,23,42,0.14), 0 4px 10px rgba(15,23,42,0.08);
+  --gold:      #c9a14a;
+  --gold-bg:   #fdf8eb;
+  --gold-br:   #ecd9a3;
+  --gold-grad: linear-gradient(135deg, #e0bf6e 0%, #c9a14a 50%, #9a7a2e 100%);
   --r-s: 6px; --r-m: 10px; --r-l: 14px;
   --font: 'Hiragino Sans','Meiryo','Yu Gothic',sans-serif;
 }
@@ -95,12 +101,22 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
 
 /* SHOP CARD */
 .shop-card {
-  background: var(--white); border: 1px solid var(--border);
+  position: relative; overflow: hidden;
+  background: linear-gradient(180deg, #fdfdff 0%, var(--white) 100%);
+  border: 1px solid var(--border);
   border-radius: var(--r-l); padding: 18px 16px;
-  margin-bottom: 12px; box-shadow: var(--shadow-sm);
-  transition: box-shadow .2s, border-color .2s;
+  margin-bottom: 14px; box-shadow: var(--shadow-premium);
+  transition: transform .15s, box-shadow .2s, border-color .2s;
 }
-.shop-card:hover { box-shadow: var(--shadow-md); border-color: var(--primary-br); }
+.shop-card::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--gold-grad); opacity: 0; transition: opacity .2s;
+}
+.shop-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-premium-hover); border-color: var(--gold-br);
+}
+.shop-card:hover::before { opacity: 1; }
 .shop-card__name {
   font-size: 1.05rem; font-weight: 800; color: var(--text); margin-bottom: 10px;
 }
@@ -126,6 +142,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
   border: 1px solid var(--border-d); color: var(--text-sub); background: var(--white);
   transition: all .15s;
 }
+.action-btn:hover  { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
 .action-btn:active { transform: scale(.97); }
 .action-btn--checker { color: var(--primary); background: var(--primary-bg); border-color: var(--primary-br); }
 .action-btn--checker:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
