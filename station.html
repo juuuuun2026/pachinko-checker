@@ -7,250 +7,157 @@
 <meta name="description" id="page-desc" content="総武線沿い パチンコ店舗情報">
 <!-- OGP -->
 <meta property="og:type"        content="website">
-<meta property="og:title"       id="og-title"       content="駅の店舗 | 総武線パチンコ攻略">
-<meta property="og:description" id="og-desc"        content="総武線沿い パチンコ店舗情報">
-<meta property="og:url"         id="og-url"         content="https://pachinko-checker.netlify.app/stations.html">
+<meta property="og:title"       id="og-title"  content="駅の店舗 | 総武線パチンコ攻略">
+<meta property="og:description" id="og-desc"   content="総武線沿い パチンコ店舗情報">
+<meta property="og:url"         id="og-url"    content="https://pachinko-checker.netlify.app/stations.html">
 <meta property="og:site_name"   content="総武線パチンコ攻略">
 <meta property="og:locale"      content="ja_JP">
-<!-- Twitter Card -->
 <meta name="twitter:card"        content="summary">
-<meta name="twitter:title"       id="tw-title"       content="駅の店舗 | 総武線パチンコ攻略">
-<meta name="twitter:description" id="tw-desc"        content="総武線沿い パチンコ店舗情報">
-<!-- Favicon -->
+<meta name="twitter:title"       id="tw-title" content="駅の店舗 | 総武線パチンコ攻略">
+<meta name="twitter:description" id="tw-desc"  content="総武線沿い パチンコ店舗情報">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><text y='32' font-size='32'>🎰</text></svg>">
 <style>
-/* ===================================================
-   DESIGN SYSTEM — 共通トークン
-=================================================== */
 :root {
-  --bg:          #04040e;
-  --card:        rgba(10, 8, 28, 0.93);
-  --card2:       rgba(16, 12, 42, 0.9);
-
-  --red:         #ff1a4b;
-  --gold:        #ffcc00;
-  --blue:        #00d4ff;
-  --green:       #00e676;
-  --purple:      #c07aff;
-
-  --red-d:       rgba(255,26,75,0.13);
-  --gold-d:      rgba(255,204,0,0.12);
-  --blue-d:      rgba(0,212,255,0.1);
-  --purple-d:    rgba(192,122,255,0.1);
-
-  --glow-r:      0 0 28px rgba(255,26,75,0.5);
-  --glow-g:      0 0 24px rgba(255,204,0,0.45);
-  --glow-b:      0 0 20px rgba(0,212,255,0.4);
-
-  --text:        #f0f0fc;
-  --muted:       #72729a;
-  --dim:         #36365a;
-
-  --br-g:        rgba(255,204,0,0.2);
-  --br-d:        rgba(255,255,255,0.07);
-
-  --r-s: 8px; --r-m: 14px; --r-l: 20px; --r-xl: 28px;
+  --bg:         #f1f5f9;
+  --white:      #ffffff;
+  --primary:    #1d4ed8;
+  --primary-l:  #3b82f6;
+  --primary-bg: #eff6ff;
+  --primary-br: #bfdbfe;
+  --accent:     #b45309;
+  --accent-bg:  #fef3c7;
+  --accent-br:  #fcd34d;
+  --green:      #15803d;
+  --green-bg:   #f0fdf4;
+  --orange:     #c2410c;
+  --orange-bg:  #fff7ed;
+  --orange-br:  #fed7aa;
+  --text:       #0f172a;
+  --text-sub:   #475569;
+  --text-muted: #94a3b8;
+  --border:     #e2e8f0;
+  --border-d:   #cbd5e1;
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.07);
+  --shadow-md:  0 4px 16px rgba(0,0,0,0.08);
+  --r-s: 6px; --r-m: 10px; --r-l: 14px;
   --font: 'Hiragino Sans','Meiryo','Yu Gothic',sans-serif;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; }
 
-body {
-  font-family: var(--font);
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-body::before {
-  content: '';
-  position: fixed; inset: 0; pointer-events: none; z-index: 0;
-  background:
-    radial-gradient(ellipse at 10% 60%, rgba(255,26,75,0.04) 0%, transparent 50%),
-    radial-gradient(ellipse at 90% 20%, rgba(255,204,0,0.05) 0%, transparent 55%);
-}
-
-/* ===== NAV ===== */
+/* NAV */
 .site-nav {
   position: sticky; top: 0; z-index: 200;
-  background: rgba(4,4,14,0.97);
-  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255,204,0,0.13);
+  background: var(--white); border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
   display: flex; align-items: center; gap: 4px;
-  padding: 0 16px; height: 56px;
+  padding: 0 20px; height: 58px;
 }
 .nav-brand {
-  font-size: 1rem; font-weight: 900; letter-spacing: 0.02em;
-  background: linear-gradient(135deg,var(--gold) 0%,#ff8c00 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  font-size: 1rem; font-weight: 800; color: var(--primary);
   text-decoration: none; flex: 1;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .nav-link {
-  color: var(--muted); text-decoration: none;
-  font-size: 0.8rem; padding: 6px 10px; border-radius: var(--r-s);
-  transition: color .2s, background .2s; white-space: nowrap;
-  position: relative;
+  color: var(--text-sub); text-decoration: none;
+  font-size: 0.82rem; font-weight: 500;
+  padding: 6px 12px; border-radius: var(--r-s);
+  transition: color .15s, background .15s; white-space: nowrap;
 }
-.nav-link:hover { color: var(--gold); background: rgba(255,204,0,0.07); }
-.nav-link.active { color: var(--gold); background: rgba(255,204,0,0.1); }
-.nav-link.active::after {
-  content: ''; position: absolute; bottom: 2px; left: 50%;
-  transform: translateX(-50%);
-  width: 4px; height: 4px; border-radius: 50%; background: var(--gold);
-}
+.nav-link:hover  { color: var(--primary); background: var(--primary-bg); }
+.nav-link.active { color: var(--primary); background: var(--primary-bg); font-weight: 700; }
 
-/* ===== LAYOUT ===== */
-.page-wrap {
-  max-width: 640px; margin: 0 auto;
-  padding: 0 16px 80px; position: relative; z-index: 1;
-}
+/* LAYOUT */
+.page-wrap { max-width: 680px; margin: 0 auto; padding: 0 20px 80px; }
 
-/* ===== BACK LINK ===== */
+/* BACK LINK */
 .back-link {
-  display: inline-flex; align-items: center; gap: 6px;
-  color: var(--muted); text-decoration: none;
-  font-size: 0.85rem; padding: 16px 0 8px;
-  transition: color .2s;
+  display: inline-flex; align-items: center; gap: 5px;
+  color: var(--text-sub); text-decoration: none;
+  font-size: 0.84rem; padding: 16px 0 8px;
+  transition: color .15s;
 }
-.back-link:hover { color: var(--gold); }
+.back-link:hover { color: var(--primary); }
 
-/* ===== HERO ===== */
-.page-hero { padding: 8px 0 26px; position: relative; }
-.page-hero::after {
-  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg,transparent,rgba(255,204,0,0.3),transparent);
-}
+/* HERO */
+.page-hero { padding: 8px 0 24px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
 .page-hero h1 {
-  font-size: 1.55rem; font-weight: 900; margin-bottom: 6px;
-  background: linear-gradient(135deg,#fff 0%,var(--gold) 55%,#ff8c00 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 18px rgba(255,204,0,0.32));
+  font-size: 1.5rem; font-weight: 900; color: var(--text);
+  letter-spacing: -0.02em; margin-bottom: 5px;
 }
-.page-hero p { font-size: 0.84rem; color: var(--muted); }
+.page-hero p { font-size: 0.84rem; color: var(--text-sub); }
 .shop-count-label {
   display: inline-block; margin-top: 10px;
-  font-size: 0.78rem; color: var(--blue);
-  background: var(--blue-d);
-  border: 1px solid rgba(0,212,255,0.25);
-  padding: 4px 14px; border-radius: 20px;
+  font-size: 0.78rem; color: var(--primary);
+  background: var(--primary-bg); border: 1px solid var(--primary-br);
+  padding: 4px 14px; border-radius: 20px; font-weight: 600;
 }
 
-/* ===== SHOP CARD ===== */
+/* SHOP CARD */
 .shop-card {
-  background: var(--card);
-  border: 1px solid var(--br-d);
-  border-radius: var(--r-m);
-  padding: 18px 16px;
-  margin-bottom: 14px;
-  transition: border-color .2s, box-shadow .2s;
-  position: relative;
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--r-l); padding: 18px 16px;
+  margin-bottom: 12px; box-shadow: var(--shadow-sm);
+  transition: box-shadow .2s, border-color .2s;
 }
-.shop-card:hover {
-  border-color: rgba(255,204,0,0.28);
-  box-shadow: 0 0 24px rgba(255,204,0,0.08), 0 8px 24px rgba(0,0,0,.3);
-}
+.shop-card:hover { box-shadow: var(--shadow-md); border-color: var(--primary-br); }
 .shop-card__name {
-  font-size: 1.08rem; font-weight: bold; color: var(--text); margin-bottom: 12px;
+  font-size: 1.05rem; font-weight: 800; color: var(--text); margin-bottom: 10px;
 }
 
-/* ===== META TAGS ===== */
-.shop-card__meta {
-  display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px;
-}
+/* META TAGS */
+.shop-card__meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
 .meta-tag {
-  font-size: 0.75rem;
-  background: rgba(255,255,255,0.04);
-  color: var(--muted);
+  font-size: 0.74rem; font-weight: 500;
   padding: 4px 10px; border-radius: 20px;
-  border: 1px solid var(--br-d);
+  background: #f8fafc; color: var(--text-sub); border: 1px solid var(--border);
 }
-.meta-tag--walk   { color: var(--blue);   background: var(--blue-d);   border-color: rgba(0,212,255,0.25); }
-.meta-tag--hours  { color: #7de87a;        background: rgba(125,232,122,0.07); border-color: rgba(125,232,122,0.2); }
-.meta-tag--total  { color: var(--gold);   background: var(--gold-d);   border-color: rgba(255,204,0,0.25); }
-.meta-tag--slot   { color: #ff9d4d;       background: rgba(255,157,77,0.1); border-color: rgba(255,157,77,0.25); }
+.meta-tag--walk  { color: var(--primary); background: var(--primary-bg); border-color: var(--primary-br); }
+.meta-tag--hours { color: var(--green);   background: var(--green-bg);   border-color: #bbf7d0; }
+.meta-tag--total { color: var(--accent);  background: var(--accent-bg);  border-color: var(--accent-br); }
+.meta-tag--slot  { color: var(--orange);  background: var(--orange-bg);  border-color: var(--orange-br); }
 
-/* ===== ACTION BUTTONS ===== */
-.shop-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 8px;
-}
+/* ACTION BUTTONS */
+.shop-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
 .action-btn {
   display: flex; align-items: center; justify-content: center; gap: 5px;
-  padding: 10px 6px;
-  border-radius: var(--r-s);
-  font-size: 0.76rem; font-weight: bold;
-  text-decoration: none;
-  transition: opacity .15s, transform .1s, box-shadow .15s;
-  text-align: center; line-height: 1.3;
+  padding: 10px 6px; border-radius: var(--r-m);
+  font-size: 0.76rem; font-weight: 600; text-decoration: none; text-align: center;
+  border: 1px solid var(--border-d); color: var(--text-sub); background: var(--white);
+  transition: all .15s;
 }
-.action-btn:active { opacity: 0.8; transform: scale(0.97); }
+.action-btn:active { transform: scale(.97); }
+.action-btn--checker { color: var(--primary); background: var(--primary-bg); border-color: var(--primary-br); }
+.action-btn--checker:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+.action-btn--pworld  { color: var(--accent); background: var(--accent-bg); border-color: var(--accent-br); }
+.action-btn--pworld:hover  { background: var(--accent); color: #fff; border-color: var(--accent); }
+.action-btn--daidata { color: #7c3aed; background: #f5f3ff; border-color: #c4b5fd; }
+.action-btn--daidata:hover { background: #7c3aed; color: #fff; border-color: #7c3aed; }
 
-/* 特定日チェッカー — 赤系 */
-.action-btn--checker {
-  background: var(--red-d);
-  color: var(--red);
-  border: 1px solid rgba(255,26,75,0.3);
-}
-.action-btn--checker:hover {
-  background: rgba(255,26,75,0.2);
-  box-shadow: 0 0 12px rgba(255,26,75,0.2);
-}
-
-/* P-world — 青系 */
-.action-btn--pworld {
-  background: var(--blue-d);
-  color: var(--blue);
-  border: 1px solid rgba(0,212,255,0.3);
-}
-.action-btn--pworld:hover {
-  background: rgba(0,212,255,0.18);
-  box-shadow: 0 0 12px rgba(0,212,255,0.2);
-}
-
-/* 台データ — 紫系 */
-.action-btn--daidata {
-  background: var(--purple-d);
-  color: var(--purple);
-  border: 1px solid rgba(192,122,255,0.3);
-}
-.action-btn--daidata:hover {
-  background: rgba(192,122,255,0.18);
-  box-shadow: 0 0 12px rgba(192,122,255,0.2);
-}
-
-/* ===== EMPTY / ERROR STATE ===== */
-.no-shops-msg {
-  text-align: center; padding: 60px 16px;
-  color: var(--muted);
-}
-.no-shops-msg .no-shops-icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.45; }
+/* EMPTY / ERROR */
+.no-shops-msg { text-align: center; padding: 60px 16px; color: var(--text-muted); }
+.no-shops-msg .no-shops-icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.5; }
 .no-shops-msg p { font-size: 0.9rem; line-height: 1.7; }
-.error-msg { text-align: center; padding: 60px 16px; color: #ff6666; }
+.error-msg { text-align: center; padding: 60px 16px; color: #dc2626; }
 
-/* ===== FOOTER ===== */
+/* FOOTER */
 .site-footer {
-  background: rgba(4,4,14,.98); border-top: 1px solid rgba(255,204,0,.1);
-  padding: 32px 16px 24px; text-align: center; position: relative; z-index: 1;
+  background: var(--white); border-top: 1px solid var(--border);
+  padding: 32px 20px 28px; text-align: center;
 }
-.footer-brand {
-  font-size: 1rem; font-weight: 900; letter-spacing: 0.03em; margin-bottom: 10px;
-  background: linear-gradient(135deg,var(--gold),#ff8c00);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
-.footer-links { display: flex; gap: 20px; justify-content: center; margin-bottom: 10px; }
-.footer-links a { font-size: .78rem; color: var(--muted); text-decoration: none; transition: color .2s; }
-.footer-links a:hover { color: var(--gold); }
-.footer-desc { font-size: .73rem; color: var(--dim); line-height: 1.7; margin-bottom: 10px; }
-.footer-copy { font-size: .7rem; color: #2a2a3a; }
+.footer-brand { font-size: 1rem; font-weight: 800; color: var(--primary); margin-bottom: 12px; }
+.footer-links { display: flex; gap: 24px; justify-content: center; margin-bottom: 10px; }
+.footer-links a { font-size: .78rem; color: var(--text-sub); text-decoration: none; transition: color .15s; }
+.footer-links a:hover { color: var(--primary); }
+.footer-desc { font-size: .73rem; color: var(--text-muted); margin-bottom: 8px; }
+.footer-copy { font-size: .7rem; color: var(--text-muted); }
 
-/* ===== RESPONSIVE ===== */
 @media (max-width: 480px) {
   .shop-actions { grid-template-columns: 1fr 1fr; }
   .action-btn:last-child { grid-column: span 2; }
 }
 @media (max-width: 400px) {
-  .nav-link { padding: 6px 7px; font-size: .76rem; }
+  .nav-link { padding: 6px 8px; font-size: .78rem; }
   .shop-actions { grid-template-columns: 1fr; }
   .action-btn:last-child { grid-column: auto; }
 }
@@ -259,7 +166,7 @@ body::before {
 <body>
 
 <nav class="site-nav">
-  <a href="index.html" class="nav-brand">⚡ 総武線パチンコ攻略</a>
+  <a href="index.html" class="nav-brand">🎰 総武線パチンコ攻略</a>
   <a href="index.html" class="nav-link">トップ</a>
   <a href="index.html#checker-section" class="nav-link">特定日</a>
   <a href="stations.html" class="nav-link active">駅別店舗</a>
@@ -268,17 +175,12 @@ body::before {
 <div class="page-wrap">
   <a href="stations.html" class="back-link">← 駅一覧に戻る</a>
 
-  <div class="page-hero" id="station-hero">
-    <!-- JS で生成 -->
-  </div>
-
-  <div id="shop-cards">
-    <!-- JS で生成 -->
-  </div>
+  <div class="page-hero" id="station-hero"></div>
+  <div id="shop-cards"></div>
 </div>
 
 <footer class="site-footer">
-  <div class="footer-brand">⚡ 総武線パチンコ攻略</div>
+  <div class="footer-brand">🎰 総武線パチンコ攻略</div>
   <div class="footer-links">
     <a href="index.html">トップ</a>
     <a href="index.html#checker-section">特定日チェッカー</a>
@@ -295,7 +197,6 @@ function getPworldLink(name) {
   if (path) return `https://www.p-world.co.jp/${path}.htm`;
   return `https://www.p-world.co.jp/search.htm?kw=${encodeURIComponent(name)}`;
 }
-
 function getDaidataLink(name) {
   const id = SHOPS[name]?.daidata;
   if (id) return `https://daidata.goraggio.com/${id}`;
@@ -309,7 +210,7 @@ function renderStationPage() {
 
   if (!station) {
     document.getElementById('station-hero').innerHTML =
-      '<div class="error-msg">⚠️ 駅が見つかりません。<br><a href="stations.html" style="color:var(--gold)">駅一覧に戻る</a></div>';
+      '<div class="error-msg">⚠️ 駅が見つかりません。<br><a href="stations.html" style="color:var(--primary)">駅一覧に戻る</a></div>';
     return;
   }
 
@@ -319,7 +220,6 @@ function renderStationPage() {
   const pageTitle = `${stationJa}駅のパチンコ店舗 | 総武線パチンコ攻略`;
   const pageDesc  = `${stationJa}駅周辺のパチンコ店舗一覧。徒歩分・特定日情報・P-world・台データへの直リンク付き。`;
   const pageUrl   = `https://pachinko-checker.netlify.app/station.html?s=${encodeURIComponent(stationId)}`;
-
   document.getElementById('page-title').textContent = pageTitle;
   document.getElementById('page-desc').setAttribute('content', pageDesc);
   document.getElementById('og-title').setAttribute('content', pageTitle);
@@ -328,18 +228,14 @@ function renderStationPage() {
   document.getElementById('tw-title').setAttribute('content', pageTitle);
   document.getElementById('tw-desc').setAttribute('content', pageDesc);
 
-  // 該当駅の店舗を抽出して徒歩分昇順ソート
   const stationShops = Object.entries(SHOPS)
     .filter(([, data]) => data.station === stationJa)
     .sort(([, a], [, b]) => a.walk - b.walk);
 
-  // ヒーロー
   document.getElementById('station-hero').innerHTML = `
     <h1>🚉 ${stationJa}駅</h1>
     <p>周辺のパチンコ・スロット店舗</p>
-    ${stationShops.length > 0
-      ? `<span class="shop-count-label">${stationShops.length}店舗</span>`
-      : ''}`;
+    ${stationShops.length > 0 ? `<span class="shop-count-label">${stationShops.length}店舗</span>` : ''}`;
 
   const container = document.getElementById('shop-cards');
 
@@ -348,7 +244,7 @@ function renderStationPage() {
       <div class="no-shops-msg">
         <div class="no-shops-icon">🔍</div>
         <p>この駅の店舗情報はまだ登録されていません。<br>
-           <a href="stations.html" style="color:var(--gold);text-decoration:none;">← 他の駅を見る</a></p>
+           <a href="stations.html" style="color:var(--primary);text-decoration:none;">← 他の駅を見る</a></p>
       </div>`;
     return;
   }
@@ -361,6 +257,7 @@ function renderStationPage() {
     const hoursTag = data.hours
       ? `<span class="meta-tag meta-tag--hours">🕐 ${data.hours}</span>`
       : `<span class="meta-tag">🕐 営業時間 要確認</span>`;
+
     const machineTag = (data.p_total && data.s_total)
       ? `<span class="meta-tag meta-tag--total">🎰 P ${data.p_total}台</span><span class="meta-tag meta-tag--slot">🎲 S ${data.s_total}台</span>`
       : `<span class="meta-tag">🎰 台数 要確認</span>`;
@@ -374,17 +271,9 @@ function renderStationPage() {
           ${machineTag}
         </div>
         <div class="shop-actions">
-          <a class="action-btn action-btn--checker" href="${checkerUrl}">
-            📅 特定日
-          </a>
-          <a class="action-btn action-btn--pworld" href="${pworldUrl}"
-             target="_blank" rel="noopener">
-            🌐 P-world
-          </a>
-          <a class="action-btn action-btn--daidata" href="${daidataUrl}"
-             target="_blank" rel="noopener">
-            📊 台データ
-          </a>
+          <a class="action-btn action-btn--checker" href="${checkerUrl}">📅 特定日</a>
+          <a class="action-btn action-btn--pworld"  href="${pworldUrl}" target="_blank" rel="noopener">🌐 P-world</a>
+          <a class="action-btn action-btn--daidata" href="${daidataUrl}" target="_blank" rel="noopener">📊 台データ</a>
         </div>
       </div>`;
   }).join('');

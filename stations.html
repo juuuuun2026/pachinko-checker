@@ -12,235 +12,156 @@
 <meta property="og:url"         content="https://pachinko-checker.netlify.app/stations.html">
 <meta property="og:site_name"   content="総武線パチンコ攻略">
 <meta property="og:locale"      content="ja_JP">
-<!-- Twitter Card -->
 <meta name="twitter:card"        content="summary">
 <meta name="twitter:title"       content="駅別店舗一覧 | 総武線パチンコ攻略（千葉〜秋葉原）">
 <meta name="twitter:description" content="総武線沿い（千葉〜秋葉原）20駅のパチンコ店舗を駅別に検索。徒歩分・台データ・P-worldへの直リンク付き。">
-<!-- Favicon -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><text y='32' font-size='32'>🎰</text></svg>">
 <style>
-/* ===================================================
-   DESIGN SYSTEM — 共通トークン
-=================================================== */
 :root {
-  --bg:          #04040e;
-  --card:        rgba(10, 8, 28, 0.93);
-  --card2:       rgba(16, 12, 42, 0.9);
-
-  --red:         #ff1a4b;
-  --gold:        #ffcc00;
-  --blue:        #00d4ff;
-  --green:       #00e676;
-
-  --red-d:       rgba(255,26,75,0.13);
-  --gold-d:      rgba(255,204,0,0.12);
-  --blue-d:      rgba(0,212,255,0.1);
-
-  --glow-r:      0 0 28px rgba(255,26,75,0.5);
-  --glow-g:      0 0 24px rgba(255,204,0,0.45);
-  --glow-b:      0 0 20px rgba(0,212,255,0.4);
-
-  --text:        #f0f0fc;
-  --muted:       #72729a;
-  --dim:         #36365a;
-
-  --br-g:        rgba(255,204,0,0.2);
-  --br-d:        rgba(255,255,255,0.07);
-
-  --r-s: 8px; --r-m: 14px; --r-l: 20px; --r-xl: 28px;
+  --bg:         #f1f5f9;
+  --white:      #ffffff;
+  --primary:    #1d4ed8;
+  --primary-l:  #3b82f6;
+  --primary-bg: #eff6ff;
+  --primary-br: #bfdbfe;
+  --text:       #0f172a;
+  --text-sub:   #475569;
+  --text-muted: #94a3b8;
+  --border:     #e2e8f0;
+  --border-d:   #cbd5e1;
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.07);
+  --shadow-md:  0 4px 16px rgba(0,0,0,0.08);
+  --r-s: 6px; --r-m: 10px; --r-l: 14px;
   --font: 'Hiragino Sans','Meiryo','Yu Gothic',sans-serif;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; }
 
-body {
-  font-family: var(--font);
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-body::before {
-  content: '';
-  position: fixed; inset: 0; pointer-events: none; z-index: 0;
-  background:
-    radial-gradient(ellipse at 20% 30%, rgba(0,212,255,0.05) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 70%, rgba(255,204,0,0.05) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 50%, rgba(255,26,75,0.03) 0%, transparent 55%);
-}
-
-/* ===== NAV ===== */
+/* NAV */
 .site-nav {
   position: sticky; top: 0; z-index: 200;
-  background: rgba(4,4,14,0.97);
-  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255,204,0,0.13);
+  background: var(--white); border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
   display: flex; align-items: center; gap: 4px;
-  padding: 0 16px; height: 56px;
+  padding: 0 20px; height: 58px;
 }
 .nav-brand {
-  font-size: 1rem; font-weight: 900; letter-spacing: 0.02em;
-  background: linear-gradient(135deg,var(--gold) 0%,#ff8c00 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  font-size: 1rem; font-weight: 800; color: var(--primary);
   text-decoration: none; flex: 1;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .nav-link {
-  color: var(--muted); text-decoration: none;
-  font-size: 0.8rem; padding: 6px 10px; border-radius: var(--r-s);
-  transition: color .2s, background .2s; white-space: nowrap;
-  position: relative;
+  color: var(--text-sub); text-decoration: none;
+  font-size: 0.82rem; font-weight: 500;
+  padding: 6px 12px; border-radius: var(--r-s);
+  transition: color .15s, background .15s; white-space: nowrap;
 }
-.nav-link:hover { color: var(--gold); background: rgba(255,204,0,0.07); }
-.nav-link.active { color: var(--gold); background: rgba(255,204,0,0.1); }
-.nav-link.active::after {
-  content: ''; position: absolute; bottom: 2px; left: 50%;
-  transform: translateX(-50%);
-  width: 4px; height: 4px; border-radius: 50%; background: var(--gold);
-}
+.nav-link:hover  { color: var(--primary); background: var(--primary-bg); }
+.nav-link.active { color: var(--primary); background: var(--primary-bg); font-weight: 700; }
 
-/* ===== LAYOUT ===== */
-.page-wrap {
-  max-width: 640px; margin: 0 auto;
-  padding: 0 16px 80px; position: relative; z-index: 1;
-}
+/* LAYOUT */
+.page-wrap { max-width: 680px; margin: 0 auto; padding: 0 20px 80px; }
 
-/* ===== HERO ===== */
+/* HERO */
 .page-hero {
-  text-align: center; padding: 36px 0 28px;
-  position: relative;
+  padding: 36px 0 28px; text-align: center;
+  border-bottom: 1px solid var(--border); margin-bottom: 24px;
 }
-.page-hero::after {
-  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg,transparent,rgba(0,212,255,0.35),rgba(255,204,0,0.25),transparent);
-}
-.hero-icon {
-  font-size: 3rem; margin-bottom: 12px;
-  filter: drop-shadow(0 0 18px rgba(0,212,255,0.55));
-  display: block;
-}
+.hero-icon { font-size: 2.6rem; margin-bottom: 10px; display: block; }
 .page-hero h1 {
-  font-size: 1.6rem; font-weight: 900; letter-spacing: 0.03em; margin-bottom: 8px;
-  background: linear-gradient(135deg,#fff 0%,var(--gold) 55%,#ff8c00 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 20px rgba(255,204,0,0.32));
+  font-size: 1.55rem; font-weight: 900; color: var(--text);
+  letter-spacing: -0.02em; margin-bottom: 6px;
 }
-.page-hero p { font-size: 0.85rem; color: var(--muted); }
+.page-hero p { font-size: 0.85rem; color: var(--text-sub); }
 
-/* ===== LINE BAR ===== */
+/* LINE BAR */
 .line-bar {
   display: flex; align-items: center; gap: 12px;
-  margin: 20px 0;
-  padding: 14px 16px;
-  background: var(--gold-d);
-  border: 1px solid var(--br-g);
-  border-radius: var(--r-m);
-  position: relative; overflow: hidden;
-}
-.line-bar::before {
-  content: ''; position: absolute; inset: 0; pointer-events: none;
-  background: linear-gradient(90deg,transparent 0%,rgba(255,204,0,0.04) 50%,transparent 100%);
+  padding: 12px 16px; margin-bottom: 20px;
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--r-l); box-shadow: var(--shadow-sm);
 }
 .line-dot {
-  width: 13px; height: 13px; border-radius: 50%; flex-shrink: 0;
-  background: var(--gold);
-  box-shadow: 0 0 10px rgba(255,204,0,0.8), 0 0 20px rgba(255,204,0,0.4);
+  width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0;
+  background: var(--primary);
 }
-.line-bar-text { font-size: 0.83rem; color: var(--muted); }
-.line-bar-text strong { color: var(--gold); }
+.line-bar-text { font-size: 0.83rem; color: var(--text-sub); }
+.line-bar-text strong { color: var(--primary); }
 
-/* ===== SECTION HEAD ===== */
+/* SEC HEAD */
 .sec-head {
   display: flex; align-items: center; gap: 10px;
   margin-bottom: 14px; padding-bottom: 10px;
-  border-bottom: 1px solid rgba(255,204,0,0.12);
+  border-bottom: 2px solid var(--border);
 }
-.sec-head h2 { font-size: 0.95rem; font-weight: bold; color: var(--text); }
+.sec-head h2 { font-size: 0.95rem; font-weight: 800; color: var(--text); }
 .sec-badge {
-  margin-left: auto; font-size: 0.68rem; font-weight: bold;
+  margin-left: auto; font-size: 0.68rem; font-weight: 700;
   letter-spacing: 0.1em; padding: 3px 10px; border-radius: 20px;
+  background: var(--primary-bg); color: var(--primary); border: 1px solid var(--primary-br);
 }
-.sec-badge-blue { background: var(--blue-d); color: var(--blue); border: 1px solid rgba(0,212,255,.25); }
 
-/* ===== STATION GRID ===== */
+/* STATION GRID */
 .station-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
   gap: 12px;
 }
 
-/* ===== STATION CARD ===== */
+/* STATION CARD */
 .station-card {
-  position: relative;
-  text-decoration: none;
+  position: relative; text-decoration: none;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  text-align: center;
-  padding: 22px 12px;
-  background: var(--card);
-  border-radius: var(--r-m);
-  border: 1px solid var(--br-d);
+  text-align: center; padding: 22px 12px;
+  background: var(--white); border-radius: var(--r-l);
+  border: 1px solid var(--border); box-shadow: var(--shadow-sm);
   transition: transform .2s, box-shadow .2s, border-color .2s;
-  min-height: 94px;
+  min-height: 96px;
 }
 .station-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--glow-b), 0 8px 30px rgba(0,0,0,.4);
-  border-color: rgba(0,212,255,0.4);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-br);
 }
-.station-card__icon {
-  font-size: 1.4rem; margin-bottom: 7px;
-  filter: drop-shadow(0 0 6px rgba(0,212,255,0.35));
-}
-.station-card__name {
-  font-size: 1rem; font-weight: bold; color: var(--gold); margin-bottom: 4px;
-}
-.station-card__count {
-  font-size: 0.72rem; color: var(--muted);
-}
-.station-card__count span {
-  color: var(--blue); font-weight: bold;
-}
+.station-card__icon { font-size: 1.3rem; margin-bottom: 6px; }
+.station-card__name { font-size: 1rem; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+.station-card__count { font-size: 0.72rem; color: var(--text-muted); }
+.station-card__count span { color: var(--primary); font-weight: 700; }
 
-/* 店舗なし */
+/* No shops */
 .station-card--no-shops {
-  opacity: 0.3;
-  pointer-events: none;
-  cursor: default;
+  opacity: 0.4; pointer-events: none; cursor: default;
 }
-.station-card--no-shops .station-card__name { color: var(--muted); }
+.station-card--no-shops .station-card__name { color: var(--text-muted); }
 
 /* 順序番号 */
 .station-order {
   position: absolute; top: 7px; left: 10px;
-  font-size: 0.62rem; color: var(--dim); font-weight: bold;
+  font-size: 0.62rem; color: var(--text-muted); font-weight: 600;
 }
 
-/* ===== FOOTER ===== */
+/* FOOTER */
 .site-footer {
-  background: rgba(4,4,14,.98); border-top: 1px solid rgba(255,204,0,.1);
-  padding: 32px 16px 24px; text-align: center; position: relative; z-index: 1;
+  background: var(--white); border-top: 1px solid var(--border);
+  padding: 32px 20px 28px; text-align: center;
 }
-.footer-brand {
-  font-size: 1rem; font-weight: 900; letter-spacing: 0.03em; margin-bottom: 10px;
-  background: linear-gradient(135deg,var(--gold),#ff8c00);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
-.footer-links { display: flex; gap: 20px; justify-content: center; margin-bottom: 10px; }
-.footer-links a { font-size: .78rem; color: var(--muted); text-decoration: none; transition: color .2s; }
-.footer-links a:hover { color: var(--gold); }
-.footer-desc { font-size: .73rem; color: var(--dim); line-height: 1.7; margin-bottom: 10px; }
-.footer-copy { font-size: .7rem; color: #2a2a3a; }
+.footer-brand { font-size: 1rem; font-weight: 800; color: var(--primary); margin-bottom: 12px; }
+.footer-links { display: flex; gap: 24px; justify-content: center; margin-bottom: 10px; }
+.footer-links a { font-size: .78rem; color: var(--text-sub); text-decoration: none; transition: color .15s; }
+.footer-links a:hover { color: var(--primary); }
+.footer-desc { font-size: .73rem; color: var(--text-muted); margin-bottom: 8px; }
+.footer-copy { font-size: .7rem; color: var(--text-muted); }
 
-/* ===== RESPONSIVE ===== */
 @media (max-width: 400px) {
-  .nav-link { padding: 6px 7px; font-size: .76rem; }
-  .station-grid { grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); }
+  .nav-link { padding: 6px 8px; font-size: .78rem; }
+  .station-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
 }
 </style>
 </head>
 <body>
 
 <nav class="site-nav">
-  <a href="index.html" class="nav-brand">⚡ 総武線パチンコ攻略</a>
+  <a href="index.html" class="nav-brand">🎰 総武線パチンコ攻略</a>
   <a href="index.html" class="nav-link">トップ</a>
   <a href="index.html#checker-section" class="nav-link">特定日</a>
   <a href="stations.html" class="nav-link active">駅別店舗</a>
@@ -250,7 +171,7 @@ body::before {
   <div class="page-hero">
     <span class="hero-icon">🚉</span>
     <h1>駅別店舗一覧</h1>
-    <p>千葉〜秋葉原 全20駅 · 店舗を駅ごとに絞り込む</p>
+    <p>千葉〜秋葉原 全20駅 · 駅ごとに店舗を絞り込む</p>
   </div>
 
   <div class="line-bar">
@@ -260,16 +181,14 @@ body::before {
 
   <div class="sec-head">
     <h2>🎰 全駅一覧</h2>
-    <span class="sec-badge sec-badge-blue">STATIONS</span>
+    <span class="sec-badge">STATIONS</span>
   </div>
 
-  <div class="station-grid" id="station-grid">
-    <!-- JS で生成 -->
-  </div>
+  <div class="station-grid" id="station-grid"></div>
 </div>
 
 <footer class="site-footer">
-  <div class="footer-brand">⚡ 総武線パチンコ攻略</div>
+  <div class="footer-brand">🎰 総武線パチンコ攻略</div>
   <div class="footer-links">
     <a href="index.html">トップ</a>
     <a href="index.html#checker-section">特定日チェッカー</a>
@@ -283,19 +202,15 @@ body::before {
 <script>
 function buildStationGrid() {
   const grid = document.getElementById('station-grid');
-
-  // 駅ごとの店舗数を集計
   const shopCountByStation = {};
   for (const shopData of Object.values(SHOPS)) {
     const st = shopData.station;
     shopCountByStation[st] = (shopCountByStation[st] || 0) + 1;
   }
-
   grid.innerHTML = STATIONS.map((st, i) => {
     const count = shopCountByStation[st.ja] || 0;
     const noShops = count === 0;
     const href = `station.html?s=${st.id}`;
-
     return `
       <a href="${noShops ? '#' : href}"
          class="station-card ${noShops ? 'station-card--no-shops' : ''}"
@@ -304,14 +219,11 @@ function buildStationGrid() {
         <div class="station-card__icon">🚉</div>
         <div class="station-card__name">${st.ja}</div>
         <div class="station-card__count">
-          ${count > 0
-            ? `<span>${count}</span> 店舗`
-            : '情報なし'}
+          ${count > 0 ? `<span>${count}</span> 店舗` : '情報なし'}
         </div>
       </a>`;
   }).join('');
 }
-
 buildStationGrid();
 </script>
 </body>
