@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title id="page-title">駅の店舗 | 総武線パチンコ攻略</title>
+<title id="page-title">駅の店舗 | 総武線パチンコナビ</title>
 <meta name="description" id="page-desc" content="総武線沿い パチンコ店舗情報">
 <!-- OGP -->
 <meta property="og:type"        content="website">
-<meta property="og:title"       id="og-title"  content="駅の店舗 | 総武線パチンコ攻略">
+<meta property="og:title"       id="og-title"  content="駅の店舗 | 総武線パチンコナビ">
 <meta property="og:description" id="og-desc"   content="総武線沿い パチンコ店舗情報">
 <meta property="og:url"         id="og-url"    content="https://pachinko-checker.netlify.app/stations.html">
-<meta property="og:site_name"   content="総武線パチンコ攻略">
+<meta property="og:site_name"   content="総武線パチンコナビ">
 <meta property="og:locale"      content="ja_JP">
 <meta name="twitter:card"        content="summary">
-<meta name="twitter:title"       id="tw-title" content="駅の店舗 | 総武線パチンコ攻略">
+<meta name="twitter:title"       id="tw-title" content="駅の店舗 | 総武線パチンコナビ">
 <meta name="twitter:description" id="tw-desc"  content="総武線沿い パチンコ店舗情報">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><text y='32' font-size='32'>🎰</text></svg>">
 <style>
@@ -166,7 +166,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
 <body>
 
 <nav class="site-nav">
-  <a href="index.html" class="nav-brand">🎰 総武線パチンコ攻略</a>
+  <a href="index.html" class="nav-brand">🎰 総武線パチンコナビ</a>
   <a href="index.html" class="nav-link">トップ</a>
   <a href="index.html#checker-section" class="nav-link">特定日</a>
   <a href="stations.html" class="nav-link active">駅別店舗</a>
@@ -180,13 +180,13 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
 </div>
 
 <footer class="site-footer">
-  <div class="footer-brand">🎰 総武線パチンコ攻略</div>
+  <div class="footer-brand">🎰 総武線パチンコナビ</div>
   <div class="footer-links">
     <a href="index.html">トップ</a>
     <a href="index.html#checker-section">特定日チェッカー</a>
     <a href="stations.html">駅別店舗</a>
   </div>
-  <div class="footer-desc">千葉〜秋葉原 全20駅 約40店舗の特定日情報を無料提供</div>
+  <div class="footer-desc">千葉〜秋葉原 全20駅 約40店舗のイベント日・店舗情報を無料提供</div>
   <div class="footer-copy">© 2025 総武線パチンコ攻略</div>
 </footer>
 
@@ -217,7 +217,7 @@ function renderStationPage() {
   const stationJa = station.ja;
 
   // SEO + OGP
-  const pageTitle = `${stationJa}駅のパチンコ店舗 | 総武線パチンコ攻略`;
+  const pageTitle = `${stationJa}駅のパチンコ店舗 | 総武線パチンコナビ`;
   const pageDesc  = `${stationJa}駅周辺のパチンコ店舗一覧。徒歩分・特定日情報・P-world・台データへの直リンク付き。`;
   const pageUrl   = `https://pachinko-checker.netlify.app/station.html?s=${encodeURIComponent(stationId)}`;
   document.getElementById('page-title').textContent = pageTitle;
