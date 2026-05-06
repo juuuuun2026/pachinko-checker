@@ -396,6 +396,89 @@ body {
 /* ===== SPECIALTY TAG ===== */
 .specialty-tag { background: var(--accent-bg); color: var(--accent); border-color: var(--accent-br); }
 
+/* ===== MY SHOPS ===== */
+.my-shops-wrap { padding: 0 20px; max-width: 680px; margin: 0 auto; }
+.fav-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
+.fav-item {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--r-l); padding: 12px 14px;
+  box-shadow: var(--shadow-sm);
+}
+.fav-item-info { flex: 1; min-width: 0; }
+.fav-item-name { font-size: 0.9rem; font-weight: 700; color: var(--text); display: block; }
+.fav-item-sub  { font-size: 0.72rem; color: var(--text-muted); display: block; margin-top: 2px; }
+.fav-item-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.fav-action-btn {
+  font-size: 0.74rem; font-weight: 600; padding: 5px 10px; border-radius: var(--r-s);
+  text-decoration: none; color: var(--primary); background: var(--primary-bg);
+  border: 1px solid var(--primary-br); transition: all .15s;
+}
+.fav-action-btn:hover { background: var(--primary); color: #fff; }
+
+/* ===== FAV BUTTON ===== */
+.fav-btn {
+  background: none; border: 1px solid var(--border-d); border-radius: 50%;
+  width: 32px; height: 32px; font-size: 1rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s; color: var(--text-muted); flex-shrink: 0;
+  filter: grayscale(1); opacity: .5;
+}
+.fav-btn:hover  { border-color: #fbbf24; filter: none; opacity: 1; }
+.fav-btn.active { border-color: #fbbf24; filter: none; opacity: 1; background: #fffbeb; }
+
+/* ===== SHOP DETAIL HEADER ===== */
+.shop-detail-header {
+  display: flex; align-items: flex-start; gap: 8px; margin-bottom: 6px;
+}
+.shop-detail-header .shop-detail-name { margin-bottom: 0; flex: 1; }
+
+/* ===== CALENDAR ===== */
+.cal-toggle-btn {
+  margin-left: auto; font-size: 0.72rem; font-weight: 600; cursor: pointer;
+  padding: 2px 10px; border-radius: 20px; font-family: var(--font);
+  background: var(--primary-bg); color: var(--primary);
+  border: 1px solid var(--primary-br); transition: all .15s;
+}
+.cal-toggle-btn:hover { background: var(--primary); color: #fff; }
+.calendar-wrap {
+  background: #f8fafc; border: 1px solid var(--border);
+  border-radius: var(--r-m); padding: 12px; margin: 6px 0 10px;
+}
+.cal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px;
+}
+.cal-title { font-size: 0.85rem; font-weight: 700; color: var(--text); }
+.cal-nav-btn {
+  background: var(--white); border: 1px solid var(--border-d); border-radius: var(--r-s);
+  width: 28px; height: 28px; font-size: 1rem; cursor: pointer; color: var(--text-sub);
+  transition: all .15s; display: flex; align-items: center; justify-content: center;
+}
+.cal-nav-btn:hover { border-color: var(--primary-br); color: var(--primary); }
+.cal-grid {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px;
+}
+.cal-day-header {
+  text-align: center; font-size: 0.66rem; font-weight: 700;
+  color: var(--text-muted); padding: 4px 0;
+}
+.cal-day-header:first-child { color: #dc2626; }
+.cal-day-header:last-child  { color: var(--primary); }
+.cal-day {
+  text-align: center; font-size: 0.72rem; padding: 5px 2px;
+  border-radius: var(--r-s); color: var(--text-sub); cursor: default;
+}
+.cal-day.out     { color: transparent; }
+.cal-day.special {
+  background: var(--primary-bg); color: var(--primary);
+  font-weight: 700; border: 1px solid var(--primary-br);
+}
+.cal-day.today {
+  background: #dc2626; color: #fff; font-weight: 700; border-radius: 50%;
+}
+.cal-day.special.today { background: #dc2626; color: #fff; border-color: #dc2626; }
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 440px) {
   .hero-title { font-size: 1.7rem; }
@@ -443,6 +526,8 @@ body {
     <a href="stations.html" class="cta-btn cta-s">🚉 駅別に店舗を探す</a>
   </div>
 </section>
+
+<div class="my-shops-wrap" id="my-shops-section"></div>
 
 <main class="page-wrap">
 
@@ -533,6 +618,8 @@ window.addEventListener('DOMContentLoaded', () => {
   const mm = String(today.getMonth()+1).padStart(2,'0');
   const dd = String(today.getDate()).padStart(2,'0');
   document.getElementById('date-input').value = `${yyyy}-${mm}-${dd}`;
+
+  renderMyShops();
 
   const params = new URLSearchParams(location.search);
   const preShop = params.get('shop');
@@ -677,12 +764,20 @@ function renderShopDetail(name, area) {
   const safeName = name.replace(/'/g, "\\'");
   return `
     <div class="shop-detail-card">
-      <div class="shop-detail-name">${name}</div>
-      <span class="shop-detail-area">${area === 'tokyo' ? '東京' : '千葉'}</span>
+      <div class="shop-detail-header">
+        <div>
+          <div class="shop-detail-name">${name}</div>
+          <span class="shop-detail-area">${area === 'tokyo' ? '東京' : '千葉'}</span>
+        </div>
+        <button class="fav-btn${isFav(name) ? ' active' : ''}" data-name="${name}" onclick="toggleFav('${safeName}')" title="お気に入り">⭐</button>
+      </div>
       ${infoHTML}
       ${shopLinksHTML(name)}
-      <div class="shop-detail-section">📅 特定日パターン</div>
+      <div class="shop-detail-section">📅 特定日パターン
+        <button class="cal-toggle-btn" id="caltoggle-${CSS.escape(name)}" onclick="toggleCalendar('${safeName}')">📅 カレンダー</button>
+      </div>
       <div class="shop-detail-patterns">${patLabels}</div>
+      <div class="calendar-wrap" id="cal-${CSS.escape(name)}" style="display:none"></div>
       <div class="shop-detail-section">📆 直近の特定日（今日〜2ヶ月）</div>
       ${upcomingHTML}
       <div class="shop-detail-section">🎉 イベント情報
@@ -817,18 +912,21 @@ const AREA_LABEL = { tokyo: '東京', chiba: '千葉' };
 function renderRanking(top) {
   const el = document.getElementById('ranking');
   if (top.length === 0) { el.innerHTML = '<div class="no-result">該当店舗がありません</div>'; return; }
-  el.innerHTML = top.map((s,i) => `
+  el.innerHTML = top.map((s,i) => {
+    const safeName = s.name.replace(/'/g, "\\'");
+    return `
     <div class="rank-card rank-${i+1}">
       <div class="rank-header">
         <span class="rank-medal">${MEDALS[i]}</span>
         <span class="rank-name">${s.name}</span>
         <span class="rank-area">${AREA_LABEL[s.area]}</span>
         <span class="rank-score">${s.score}パターン</span>
+        <button class="fav-btn${isFav(s.name) ? ' active' : ''}" data-name="${s.name}" onclick="toggleFav('${safeName}')" title="お気に入り">⭐</button>
       </div>
       <div class="rank-patterns">${s.labels.map(l => `<span class="pattern-tag">${l}</span>`).join('')}</div>
       ${shopLinksHTML(s.name)}
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 
 function renderList(shops) {
@@ -847,6 +945,104 @@ function renderList(shops) {
       <span class="shop-score-badge">${s.score}PT</span>
     </div>
   `).join('');
+}
+
+// ===== お気に入り =====
+function getFavs() { return JSON.parse(localStorage.getItem('pachinko_favs') || '[]'); }
+function saveFavs(favs) { localStorage.setItem('pachinko_favs', JSON.stringify(favs)); }
+function isFav(name) { return getFavs().includes(name); }
+function toggleFav(name) {
+  let favs = getFavs();
+  if (favs.includes(name)) { favs = favs.filter(n => n !== name); }
+  else { favs.unshift(name); }
+  saveFavs(favs);
+  const active = isFav(name);
+  document.querySelectorAll('.fav-btn[data-name="' + name + '"]').forEach(btn => {
+    btn.classList.toggle('active', active);
+  });
+  renderMyShops();
+}
+function renderMyShops() {
+  const sec = document.getElementById('my-shops-section');
+  if (!sec) return;
+  const favs = getFavs();
+  if (favs.length === 0) { sec.innerHTML = ''; return; }
+  if (!allShops) allShops = getAllShops();
+  const items = favs.map(name => {
+    const safeName = name.replace(/'/g, "\\'");
+    return `<div class="fav-item">
+      <div class="fav-item-name">${name}</div>
+      <a class="fav-item-link" href="index.html?shop=${encodeURIComponent(name)}">特定日</a>
+      <button class="fav-btn active" data-name="${name}" onclick="toggleFav('${safeName}')" title="お気に入り解除">⭐</button>
+    </div>`;
+  }).join('');
+  sec.innerHTML = `
+    <div class="my-shops-card">
+      <div class="my-shops-head">
+        <span class="my-shops-title">⭐ マイ店舗</span>
+        <span class="my-shops-count">${favs.length}件</span>
+      </div>
+      <div class="fav-list">${items}</div>
+    </div>`;
+}
+
+// ===== カレンダービュー =====
+const calState = {};
+function getCalState(name) {
+  if (!calState[name]) {
+    const t = new Date(); calState[name] = { yr: t.getFullYear(), mo: t.getMonth() };
+  }
+  return calState[name];
+}
+function toggleCalendar(name) {
+  const wrap = document.getElementById('cal-' + CSS.escape(name));
+  if (!wrap) return;
+  const isOpen = wrap.style.display !== 'none';
+  wrap.style.display = isOpen ? 'none' : 'block';
+  const btn = document.getElementById('caltoggle-' + CSS.escape(name));
+  if (btn) btn.textContent = isOpen ? '📅 カレンダー' : '▲ 閉じる';
+  if (!isOpen) renderCalendarInto(name);
+}
+function calNav(name, delta) {
+  const st = getCalState(name);
+  st.mo += delta;
+  if (st.mo > 11) { st.mo = 0; st.yr++; }
+  if (st.mo < 0)  { st.mo = 11; st.yr--; }
+  renderCalendarInto(name);
+}
+function renderCalendarInto(name) {
+  const wrap = document.getElementById('cal-' + CSS.escape(name));
+  if (!wrap) return;
+  if (!allShops) allShops = getAllShops();
+  const shop = allShops.find(s => s.name === name);
+  const area = shop ? shop.area : 'tokyo';
+  const patterns = [];
+  for (const pat of Object.keys(DATA[area])) {
+    if ((DATA[area][pat] || []).includes(name)) patterns.push(pat);
+  }
+  const st = getCalState(name);
+  const { yr, mo } = st;
+  const firstDay = new Date(yr, mo, 1).getDay();
+  const lastDate = new Date(yr, mo + 1, 0).getDate();
+  const today = new Date(); today.setHours(0,0,0,0);
+  const safeName = name.replace(/'/g, "\\'");
+  let cells = '';
+  for (let i = 0; i < firstDay; i++) cells += '<div class="cal-day out"></div>';
+  for (let d = 1; d <= lastDate; d++) {
+    const date = new Date(yr, mo, d);
+    const isSpecial = getActivePatterns(date).some(p => patterns.includes(p));
+    const isToday = date.getTime() === today.getTime();
+    const cls = ['cal-day', isSpecial ? 'special' : '', isToday ? 'today' : ''].filter(Boolean).join(' ');
+    cells += `<div class="${cls}">${d}</div>`;
+  }
+  wrap.innerHTML = `
+    <div class="cal-header">
+      <button class="cal-nav-btn" onclick="calNav('${safeName}',-1)">‹</button>
+      <span class="cal-month-label">${yr}年${mo+1}月</span>
+      <button class="cal-nav-btn" onclick="calNav('${safeName}',1)">›</button>
+    </div>
+    <div class="cal-weekdays"><span>日</span><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span></div>
+    <div class="cal-grid">${cells}</div>`;
 }
 </script>
 </body>
